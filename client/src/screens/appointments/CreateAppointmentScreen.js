@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 		flexWrap: "wrap",
 		width: "80vw",
 		marginLeft: "180px",
-		border: "1px solid white",
+		border: "1px solid black",
 	},
 	textField: {
 		marginLeft: theme.spacing(1),
@@ -30,21 +30,34 @@ const useStyles = makeStyles((theme) => ({
 		"font-size": "calc(5px + 2vmin)",
 		marginLeft: "10px",
 		marginRight: "50px",
-		color: "white",
+		color: "black",
 	},
+	formControl: {
+		width: "10vw",
+	}
 }));
 
 const CreateAppointmentScreen = () => {
 	const classes = useStyles();
 
-	const [selectedDate, setSelectedDate] = React.useState(
-		new Date("2014-08-18T21:11:54"),
-	);
-
 	const [title, setTitle] = React.useState("");
+	const [start, setStart] = React.useState(
+		new Date("2014-08-18 21:11"),
+	);
+	const [end, setEnd] = React.useState(
+		new Date("2014-08-18 21:11"),
+	);
+	const [repeat, setRepeat] = React.useState("");
+	const [place, setPlace] = React.useState();
+	const [description, setDescription] = React.useState("");
+	const [persons, setPersons] = React.useState("");
 
-	const handleDateChange = (date) => {
-		setSelectedDate(date);
+	const handleStartChange = (date) => {
+		setStart(date);
+		console.log(date);
+	};
+	const handleEndChange = (date) => {
+		setEnd(date);
 	};
 
 	const [age, setAge] = React.useState("");
@@ -53,11 +66,11 @@ const CreateAppointmentScreen = () => {
 		setAge(event.target.value);
 	};
 
-	const handleCreateCourse = async (e) => {
+	const handleCreateAppointment = async (e) => {
 		e.preventDefault();
 		const { data } = await axios.post(
 			"http://localhost:8080/api/appointments",
-			{ title },
+			{ title, start, end, repeat, place, description, persons },
 		);
 		console.log(data);
 		// TODO: send post request to backend with course data
@@ -65,11 +78,11 @@ const CreateAppointmentScreen = () => {
 
 	return (
 		<>
-			<p>Kurs erstellen</p>
+			<p>Termin erstellen</p>
 			<form
 				className={classes.root}
 				autoComplete="off"
-				onSubmit={(e) => handleCreateCourse(e)}
+				onSubmit={(e) => handleCreateAppointment(e)}
 			>
 				<TextField
 					id="standard-full-width"
@@ -81,25 +94,17 @@ const CreateAppointmentScreen = () => {
 					value={title}
 					onChange={(e) => setTitle(e.target.value)}
 				/>
-				<TextField
-					id="standard-full-width"
-					label="Label"
-					variant="outlined"
-					style={{ margin: 12 }}
-					fullWidth
-					margin="normal"
-				/>
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
 					<p className={classes.text}>Beginn:</p>
 					<KeyboardDateTimePicker
 						variant="inline"
 						ampm={false}
-						format="yyyy/MM/dd hh:mm a"
+						format="yyyy/MM/dd HH:mm"
 						margin="normal"
 						id="date-picker-inline"
 						label="Date picker inline"
-						value={selectedDate}
-						onChange={handleDateChange}
+						value={start}
+						onChange={handleStartChange}
 						KeyboardButtonProps={{
 							"aria-label": "change date",
 						}}
@@ -108,59 +113,65 @@ const CreateAppointmentScreen = () => {
 					<KeyboardDateTimePicker
 						variant="inline"
 						ampm={false}
-						format="yyyy/MM/dd hh:mm a"
+						format="yyyy/MM/dd HH:mm"
 						margin="normal"
 						id="date-picker-inline"
 						label="Date picker inline"
-						value={selectedDate}
-						onChange={handleDateChange}
+						value={end}
+						onChange={handleEndChange}
 						KeyboardButtonProps={{
 							"aria-label": "change date",
 						}}
 					/>
 				</MuiPickersUtilsProvider>
 				<FormControl variant="outlined" className={classes.formControl}>
-					<InputLabel id="demo-simple-select-outlined-label">Age</InputLabel>
+					<InputLabel id="demo-simple-select-outlined-label">Wiederholen </InputLabel>
 					<Select
 						labelId="demo-simple-select-outlined-label"
 						id="demo-simple-select-outlined"
-						value={age}
+						value={repeat}
 						onChange={handleChange}
-						label="Age"
+						label="Wiederholen"
 					>
 						<MenuItem value="">
 							<em>None</em>
 						</MenuItem>
-						<MenuItem value={10}>Ten</MenuItem>
-						<MenuItem value={20}>Twenty</MenuItem>
-						<MenuItem value={30}>Thirty</MenuItem>
+						<MenuItem value={10}>Täglich</MenuItem>
+						<MenuItem value={20}>Wöchentlich</MenuItem>
+						<MenuItem value={30}>Monatlich</MenuItem>
 					</Select>
 				</FormControl>
 				<TextField
 					id="standard-full-width"
-					label="Label"
+					label="Ort"
 					variant="outlined"
 					style={{ margin: 12 }}
 					fullWidth
 					margin="normal"
+					value={place}
+					onChange={(e) => setPlace(e.target.value)}
 				/>
 				<TextField
 					id="standard-full-width"
-					label="Label"
+					label="Beschreibung"
 					variant="outlined"
 					style={{ margin: 12 }}
 					fullWidth
 					margin="normal"
 					multiline
 					rows={5}
+					value={description}
+					onChange={(e) => setDescription(e.target.value)}
 				/>
 				<TextField
 					id="standard-full-width"
-					label="Label"
+					label="Personen"
 					variant="outlined"
 					style={{ margin: 12 }}
 					fullWidth
 					margin="normal"
+					value={persons}
+					onChange={(e) => setPersons(e.target.value)}
 				/>
 				<Button type="submit">Kurs erstellen</Button>
 			</form>
