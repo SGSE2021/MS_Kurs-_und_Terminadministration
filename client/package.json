@@ -42,7 +42,6 @@
     ]
   },
   "devDependencies": {
-    "@material-ui/data-grid": "*",
     "@material-ui/pickers": "^3.3.10"
   }
 }
