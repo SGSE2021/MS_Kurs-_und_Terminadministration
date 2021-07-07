@@ -12,6 +12,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -41,12 +42,8 @@ const CreateAppointmentScreen = () => {
 	const classes = useStyles();
 
 	const [title, setTitle] = React.useState("");
-	const [start, setStart] = React.useState(
-		new Date("2014-08-18 21:11"),
-	);
-	const [end, setEnd] = React.useState(
-		new Date("2014-08-18 21:11"),
-	);
+	const [start, setStart] = React.useState(Date.now());
+	const [end, setEnd] = React.useState(Date.now());
 	const [repeat, setRepeat] = React.useState("");
 	const [place, setPlace] = React.useState();
 	const [description, setDescription] = React.useState("");
@@ -73,7 +70,6 @@ const CreateAppointmentScreen = () => {
 			{ title, start, end, repeat, place, description, persons },
 		);
 		console.log(data);
-		// TODO: send post request to backend with course data
 	};
 
 	return (
@@ -173,7 +169,11 @@ const CreateAppointmentScreen = () => {
 					value={persons}
 					onChange={(e) => setPersons(e.target.value)}
 				/>
-				<Button type="submit">Kurs erstellen</Button>
+
+				<Link to="/appointments">
+					<Button>Abbrechen</Button>
+				</Link>
+				<Button type="submit">Termin anlegen</Button>
 			</form>
 		</>
 	);
