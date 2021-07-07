@@ -46,9 +46,9 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-    { id: 'beginn', numeric: false, disablePadding: false, label: 'Beginn' },
-    { id: 'titel', numeric: false, disablePadding: false, label: 'Titel' },
-    { id: 'ort', numeric: false, disablePadding: false, label: 'Raum' },
+    { id: 'start', numeric: false, disablePadding: false, label: 'Beginn' },
+    { id: 'title', numeric: false, disablePadding: false, label: 'Titel' },
+    { id: 'place', numeric: false, disablePadding: false, label: 'Raum' },
 ];
 
 function EnhancedTableHead(props) {
@@ -287,10 +287,10 @@ export default function AppointmentTable(props) {
                                             selected={isItemSelected}
                                         >
                                             <TableCell component="th" align="left" id={labelId} scope="row" padding="none">
-                                                {data.beginn != null ? (new Date(data.beginn)).toLocaleString() : data.beginn}
+                                                {data.beginn != null ? (new Date(data.beginn)).toLocaleString() : data.start}
                                             </TableCell>
-                                            <TableCell align="left">{data.titel}</TableCell>
-                                            <TableCell align="left">{data.ort}</TableCell>
+                                            <TableCell align="left">{data.title}</TableCell>
+                                            <TableCell align="left">{data.place}</TableCell>
                                         </TableRow>
                                     );
                                 })}

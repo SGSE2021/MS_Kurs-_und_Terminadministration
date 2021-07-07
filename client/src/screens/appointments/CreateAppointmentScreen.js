@@ -44,7 +44,7 @@ const CreateAppointmentScreen = () => {
 	const [title, setTitle] = React.useState("");
 	const [start, setStart] = React.useState(Date.now());
 	const [end, setEnd] = React.useState(Date.now());
-	const [repeat, setRepeat] = React.useState("");
+	const [repetition, setRepetition] = React.useState("");
 	const [place, setPlace] = React.useState();
 	const [description, setDescription] = React.useState("");
 	const [persons, setPersons] = React.useState("");
@@ -67,7 +67,7 @@ const CreateAppointmentScreen = () => {
 		e.preventDefault();
 		const { data } = await axios.post(
 			"http://localhost:8080/api/appointments",
-			{ title, start, end, repeat, place, description, persons },
+			{ title, start, end, repetition, place, description, persons },
 		);
 		console.log(data);
 	};
@@ -125,7 +125,7 @@ const CreateAppointmentScreen = () => {
 					<Select
 						labelId="demo-simple-select-outlined-label"
 						id="demo-simple-select-outlined"
-						value={repeat}
+						value={repetition}
 						onChange={handleChange}
 						label="Wiederholen"
 					>
