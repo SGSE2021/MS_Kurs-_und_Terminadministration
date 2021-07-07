@@ -181,7 +181,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function EnhancedTable(props) {
+export default function AppointmentTable(props) {
     //const { data } = props;
 
     const [data, setAppointments] = useState([]);

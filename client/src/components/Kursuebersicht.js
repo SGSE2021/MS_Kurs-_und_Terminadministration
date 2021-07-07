@@ -1,7 +1,7 @@
 import ResponsiveDrawer from './MenuAppBar.js';
 import {makeStyles} from "@material-ui/core/styles";
 import React from "react";
-import EnhancedTable from './EnhancedTable';
+import EnhancedTable from './AppointmentTable';
 
 
 

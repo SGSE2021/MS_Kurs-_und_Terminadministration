@@ -1,12 +1,12 @@
 import { Button } from "@material-ui/core";
 import React from "react";
 import { Link } from "react-router-dom";
-import EnhancedTable from "../../components/EnhancedTable";
+import AppointmentTable from "../../components/AppointmentTable";
 
 const AppointmentScreen = () => {
 	return (
 		<div>
-			<EnhancedTable/>
+			<AppointmentTable/>
 			<Link to="/appointments/create">
 				<Button>Termin anlegen</Button>
 			</Link>
