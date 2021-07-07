@@ -7,10 +7,6 @@ const AppointmentScreen = () => {
 	return (
 		<div>
 			<EnhancedTable/>
-
-			<Link to="/appointments/display">
-				<Button>Alle anzeigen</Button>
-			</Link>
 			<Link to="/appointments/create">
 				<Button>Termin anlegen</Button>
 			</Link>
