@@ -34,7 +34,6 @@ app.get(createUrl(), function (req, res) {
 });
 
 app.get(createUrl("appointments"), function (req, res) {
-	console.log("test");
 	queryDB("SELECT * FROM appointment")
 		.then(queryResult => res.status(200).json(queryResult).end())
 		.catch(error => res.status(400).end());
@@ -46,7 +45,9 @@ app.get(createUrl("appointments/:id"), function (req, res) {
 	} = req;
 	queryDB(`SELECT * FROM appointment WHERE id = ${id}`)
 		.then(queryResult => res.status(200).json(queryResult).end())
-		.catch(error => res.status(400).end());
+		.catch(error => {
+			console.log(error);
+			res.status(400).end();});
 });
 
 app.post(createUrl("appointments"), jsonParser, function (req, res) {
