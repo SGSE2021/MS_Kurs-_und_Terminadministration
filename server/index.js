@@ -37,7 +37,7 @@ app.get(createUrl("appointments"), function (req, res) {
 	console.log("test");
 	queryDB("SELECT * FROM appointment")
 		.then(queryResult => res.status(200).json(queryResult).end())
-		.catch(error => res.status(400));
+		.catch(error => res.status(400).end());
 });
 
 app.get(createUrl("appointments/:id"), function (req, res) {
@@ -101,7 +101,7 @@ app.delete(createUrl("appointments/:id"), function (req, res) {
 app.get(createUrl("courses"), function (req, res) {
 	queryDB("SELECT * FROM course")
 		.then(queryResult => res.status(200).json(queryResult).end())
-		.catch(error => res.status(400));
+		.catch(error => res.status(400).end());
 });
 
 app.get(createUrl("courses/:id"), function (req, res) {
@@ -173,7 +173,7 @@ app.get(createUrl("findAppointments"), function (req, res) {
 	const value = query[key];
 	queryDB(`SELECT * FROM appointment WHERE ${key} = '${value}'`)
 		.then(queryResult => res.status(200).json(queryResult).end())
-		.catch(error => res.status(400));
+		.catch(error => res.status(400).end());
 });
 
 app.get(createUrl("findCourses"), function (req, res) {
@@ -182,7 +182,7 @@ app.get(createUrl("findCourses"), function (req, res) {
 	const value = query[key];
 	queryDB(`SELECT * FROM course WHERE ${key} = '${value}'`)
 		.then(queryResult => res.status(200).json(queryResult).end())
-		.catch(error => res.status(400));
+		.catch(error => res.status(400).end());
 });
 
 console.log(`listening on port ${port}`);

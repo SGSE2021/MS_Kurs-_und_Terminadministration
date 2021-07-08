@@ -12,6 +12,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -40,17 +41,13 @@ const useStyles = makeStyles((theme) => ({
 const CreateAppointmentScreen = () => {
 	const classes = useStyles();
 
-	const [ti, setName] = React.useState("");
+	const [name, setName] = React.useState("");
 	const [subject, setSubject] = React.useState("");
-	const [start, setStart] = React.useState(
-		new Date("2014-08-18 21:11"),
-	);
-	const [end, setEnd] = React.useState(
-		new Date("2014-08-18 21:11"),
-	);
-	const [repeat, setRepeat] = React.useState("");
-	const [times, setTimes] = React.useState();
-	const [place, setPlace] = React.useState();
+	const [start, setStart] = React.useState(Date.now());
+	const [end, setEnd] = React.useState(Date.now());
+	const [repetition, setRepetition] = React.useState("");
+	const [times, setTimes] = React.useState(0);
+	const [place, setPlace] = React.useState("");
 	const [description, setDescription] = React.useState("");
 	const [docents, setDocents] = React.useState("");
 
@@ -71,16 +68,15 @@ const CreateAppointmentScreen = () => {
 	const handleCreateAppointment = async (e) => {
 		e.preventDefault();
 		const { data } = await axios.post(
-			"http://localhost:8080/api/appointments",
-			{ name, subject, start, end, repeat, times, place, description, docents },
+			"http://localhost:8080/api/courses",
+			{ name, subject, start, end, repetition, times, place, description, docents },
 		);
 		console.log(data);
-		// TODO: send post request to backend with course data
 	};
 
 	return (
 		<>
-			<p>Termin erstellen</p>
+			<p>Kurs anlegen</p>
 			<form
 				className={classes.root}
 				autoComplete="off"
@@ -141,7 +137,7 @@ const CreateAppointmentScreen = () => {
 					<Select
 						labelId="demo-simple-select-outlined-label"
 						id="demo-simple-select-outlined"
-						value={repeat}
+						value={repetition}
 						onChange={handleChange}
 						label="Wiederholen"
 					>
@@ -185,7 +181,11 @@ const CreateAppointmentScreen = () => {
 					value={docents}
 					onChange={(e) => setDocents(e.target.value)}
 				/>
-				<Button type="submit">Kurs erstellen</Button>
+
+				<Link to="/courses">
+					<Button>Abbrechen</Button>
+				</Link>
+				<Button type="submit">Kurs anlegen</Button>
 			</form>
 		</>
 	);

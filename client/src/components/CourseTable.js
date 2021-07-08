@@ -46,8 +46,9 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-    { id: 'start', numeric: false, disablePadding: false, label: 'Beginn' },
-    { id: 'title', numeric: false, disablePadding: false, label: 'Titel' },
+    { id: 'start', numeric: false, disablePadding: false, label: 'Datum' },
+    { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
+    { id: 'docents', numeric: false, disablePadding: false, label: 'Dozent' },
     { id: 'place', numeric: false, disablePadding: false, label: 'Raum' },
 ];
 
@@ -132,7 +133,7 @@ const EnhancedTableToolbar = (props) => {
                 </Typography>
             ) : (
                 <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-                    Termine
+                    Kurse
                 </Typography>
             )}
 
@@ -181,16 +182,16 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function AppointmentTable(props) {
+export default function CourseTable(props) {
     //const { data } = props;
 
-    const [data, setAppointments] = useState([]);
+    const [data, setData] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            const {data: appointmentsFromApi} = await axios.get("http://localhost:8080/api/appointments");
-            console.log(appointmentsFromApi);
-            setAppointments(appointmentsFromApi);
+            const {data: dataFromApi} = await axios.get("http://localhost:8080/api/courses");
+            console.log(dataFromApi);
+            setData(dataFromApi);
         };
         fetchData().then().catch(test => console.log("error getting data from API"));
     }, []);
@@ -289,7 +290,8 @@ export default function AppointmentTable(props) {
                                             <TableCell component="th" align="left" id={labelId} scope="row" padding="none">
                                                 {data.start != null ? (new Date(data.start)).toLocaleString() : data.start}
                                             </TableCell>
-                                            <TableCell align="left">{data.title}</TableCell>
+                                            <TableCell align="left">{data.name}</TableCell>
+                                            <TableCell align="left">{data.docents}</TableCell>
                                             <TableCell align="left">{data.place}</TableCell>
                                         </TableRow>
                                     );

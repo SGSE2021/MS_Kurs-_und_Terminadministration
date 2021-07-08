@@ -7,6 +7,8 @@ import AppointmentScreen from "./screens/appointments/AppointmentScreen";
 import DisplayAppointments from "./screens/appointments/DisplayAppointments";
 import Appointment from "./components/Appointment";
 import {makeStyles} from "@material-ui/core/styles";
+import CourseScreen from "./screens/courses/CourseScreen";
+import CreateCourseScreen from "./screens/courses/CreateCourseScreen";
 
 const useStyles = makeStyles(() => ({
 	app: {
@@ -46,6 +48,22 @@ function App() {
 						</Route>
 						<Route path="/appointments" strict>
 							<AppointmentScreen />
+						</Route>
+						<Route
+							path="/courses/display/:id"
+							strict
+							component={(props) => (
+								<Appointment id={props.match.params.id} />
+							)}
+						/>
+						<Route path="/courses/create" strict>
+							<CreateCourseScreen />
+						</Route>
+						<Route path="/courses/display" strict>
+							<DisplayAppointments />
+						</Route>
+						<Route path="/courses" strict>
+							<CourseScreen />
 						</Route>
 					</Switch>
 				</header>
