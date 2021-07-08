@@ -33,19 +33,17 @@ function App() {
 				<header className={classes.appheader}>
 					<ResponsiveDrawer />
 					<Switch>
+
+						<Route path="/appointments/create" strict>
+							<CreateAppointmentScreen />
+						</Route>
 						<Route
-							path="/appointments/display/:id"
+							path="/appointments/:id"
 							strict
 							component={(props) => (
 								<Appointment id={props.match.params.id} />
 							)}
 						/>
-						<Route path="/appointments/create" strict>
-							<CreateAppointmentScreen />
-						</Route>
-						<Route path="/appointments/display" strict>
-							<DisplayAppointments />
-						</Route>
 						<Route path="/appointments" strict>
 							<AppointmentScreen />
 						</Route>
