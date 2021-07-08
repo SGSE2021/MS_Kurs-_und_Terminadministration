@@ -12,7 +12,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import axios from "axios";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CreateAppointmentScreen = () => {
+	let history = useHistory();
 	const classes = useStyles();
 
 	const [title, setTitle] = React.useState("");
@@ -70,6 +71,7 @@ const CreateAppointmentScreen = () => {
 			{ title, start, end, repetition, place, description, persons },
 		);
 		console.log(data);
+		history.push("/appointments");
 	};
 
 	return (
