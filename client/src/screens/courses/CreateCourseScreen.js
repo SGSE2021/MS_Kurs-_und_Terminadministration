@@ -13,6 +13,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import axios from "axios";
 import {Link, useHistory} from "react-router-dom";
+import Input from '@material-ui/core/Input';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -34,16 +35,43 @@ const useStyles = makeStyles((theme) => ({
 		color: "black",
 	},
 	formControl: {
-		width: "10vw",
-	}
+		margin: theme.spacing(1),
+		minWidth: 120,
+		maxWidth: 300,
+	},
 }));
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+	PaperProps: {
+		style: {
+			maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+			width: 250,
+		},
+	},
+};
+
+const names = [
+	'Oliver Hansen',
+	'Van Henry',
+	'April Tucker',
+	'Ralph Hubbard',
+	'Omar Alexander',
+	'Carlos Abbott',
+	'Miriam Wagner',
+	'Bradley Wilkerson',
+	'Virginia Andrews',
+	'Kelly Snyder',
+];
+
 
 const CreateAppointmentScreen = () => {
 	let history = useHistory();
 	const classes = useStyles();
 
 	const [name, setName] = React.useState("");
-	const [subject, setSubject] = React.useState("");
+	const [subject, setSubject] = React.useState([]);
 	const [start, setStart] = React.useState(Date.now());
 	const [end, setEnd] = React.useState(Date.now());
 	const [repetition, setRepetition] = React.useState("");
@@ -102,6 +130,23 @@ const CreateAppointmentScreen = () => {
 					value={subject}
 					onChange={(e) => setSubject(e.target.value)}
 				/>
+				<FormControl className={classes.formControl}>
+					<InputLabel id="demo-mutiple-name-label">Name</InputLabel>
+					<Select
+						labelId="demo-mutiple-name-label"
+						id="demo-mutiple-name"
+						value={subject}
+						onChange={handleChange}
+						MenuProps={MenuProps}
+					>
+						{names.map((name) => (
+							<MenuItem key={name} value={name}>
+								{name}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
 					<p className={classes.text}>Beginn:</p>
 					<KeyboardDateTimePicker
@@ -140,13 +185,16 @@ const CreateAppointmentScreen = () => {
 						value={repetition}
 						onChange={handleChange}
 						label="Wiederholen"
+						MenuProps={MenuProps}
 					>
 						<MenuItem value="">
 							<em>None</em>
 						</MenuItem>
-						<MenuItem value={10}>Täglich</MenuItem>
-						<MenuItem value={20}>Wöchentlich</MenuItem>
-						<MenuItem value={30}>Monatlich</MenuItem>
+						{names.map((name) => (
+							<MenuItem key={name} value={name}>
+								{name}
+							</MenuItem>
+						))}
 					</Select>
 				</FormControl>
 				<TextField

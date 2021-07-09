@@ -26,40 +26,50 @@ const useStyles = makeStyles(() => ({
 
 function App() {
 	const classes = useStyles();
+	localStorage.setItem('current-user',"{\"uid\":\"dSwafL2b0sQcYxJgmCpzcfkh3b43\",\"firstname\":\"Dennis\",\"lastname\":\"Admin\",\"role\":2}");
+	const currentUserString = localStorage.getItem( "current-user" );
+	const currentUserObject = JSON.parse(currentUserString );
+	const {role} = currentUserObject;
+
+	//TODO: Check user with uid over user Api
+
 	return (
 		<Router>
 			<div className={classes.app}>
 				<header className={classes.appheader}>
 					<ResponsiveDrawer />
-					<Switch>
+					{(role === 2) ? (
+						<Switch>
 
-						<Route path="/appointments/create" strict>
-							<CreateAppointmentScreen />
-						</Route>
-						<Route
-							path="/appointments/:id"
-							strict
-							component={(props) => (
-								<EditAppointment id={props.match.params.id} />
-							)}
-						/>
-						<Route path="/appointments" strict>
-							<AppointmentScreen />
-						</Route>
-						<Route path="/courses/create" strict>
-							<CreateCourseScreen />
-						</Route>
-						<Route
-							path="/courses/:id"
-							strict
-							component={(props) => (
-								<EditCourseScreen id={props.match.params.id} />
-							)}
-						/>
-						<Route path="/courses" strict>
-							<CourseScreen />
-						</Route>
-					</Switch>
+							<Route path="/appointments/create" strict>
+								<CreateAppointmentScreen />
+							</Route>
+							<Route
+								path="/appointments/:id"
+								strict
+								component={(props) => (
+									<EditAppointment id={props.match.params.id} />
+								)}
+							/>
+							<Route path="/appointments" strict>
+								<AppointmentScreen />
+							</Route>
+							<Route path="/courses/create" strict>
+								<CreateCourseScreen />
+							</Route>
+							<Route
+								path="/courses/:id"
+								strict
+								component={(props) => (
+									<EditCourseScreen id={props.match.params.id} />
+								)}
+							/>
+							<Route path="/courses" strict>
+								<CourseScreen />
+							</Route>
+						</Switch>) : (
+						<p>Keine Berechtigung</p>
+					)}
 				</header>
 			</div>
 		</Router>
