@@ -18,6 +18,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import axios from "axios";
+import {ArrowLeft, ArrowRight} from "@material-ui/icons";
+import {Link} from "react-router-dom";
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -120,6 +122,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 const EnhancedTableToolbar = (props) => {
     const classes = useToolbarStyles();
     const { numSelected } = props;
+    const { handleClick } = props;
 
     return (
         <Toolbar
@@ -139,7 +142,7 @@ const EnhancedTableToolbar = (props) => {
 
             {numSelected > 0 ? (
                 <Tooltip title="Delete">
-                    <IconButton aria-label="delete">
+                    <IconButton aria-label="delete" onClick={(e) => handleClick(e)}>
                         <DeleteIcon />
                     </IconButton>
                 </Tooltip>
@@ -156,6 +159,7 @@ const EnhancedTableToolbar = (props) => {
 
 EnhancedTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
+    handleClick: PropTypes.func.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -182,19 +186,34 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+
 export default function CourseTable(props) {
-    //const { data } = props;
 
     const [data, setData] = useState([]);
 
+    //setData(props);
+
     useEffect(() => {
         const fetchData = async () => {
-            const {data: dataFromApi} = await axios.get("http://localhost:8080/api/courses");
-            console.log(dataFromApi);
-            setData(dataFromApi);
+            const {data: coursesFromApi} = await axios.get("http://localhost:8080/api/courses");
+            console.log(coursesFromApi);
+            setData(coursesFromApi);
         };
         fetchData().then().catch(test => console.log("error getting data from API"));
     }, []);
+
+    const handleDeleteClick = (e) => {
+        e.preventDefault();
+        const fetchData = async (key) => {
+            const {data} = await axios.delete(`http://localhost:8080/api/courses/${selected[key]}`);
+        };
+        for (const key in selected) {
+            fetchData(key)
+                .then(test => data.splice(data.findIndex(({id}) => id === selected[key]), 1))
+                .catch();
+        };
+        setSelected([]);
+    };
 
     const classes = useStyles();
     const [order, setOrder] = React.useState('asc');
@@ -236,6 +255,8 @@ export default function CourseTable(props) {
         }
 
         setSelected(newSelected);
+        console.log(data);
+        console.log(selected);
     };
 
     const handleChangePage = (event, newPage) => {
@@ -254,7 +275,7 @@ export default function CourseTable(props) {
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
-                <EnhancedTableToolbar numSelected={selected.length} />
+                <EnhancedTableToolbar numSelected={selected.length} handleClick={handleDeleteClick}/>
                 <TableContainer>
                     <Table
                         className={classes.table}
@@ -292,7 +313,17 @@ export default function CourseTable(props) {
                                             </TableCell>
                                             <TableCell align="left">{data.name}</TableCell>
                                             <TableCell align="left">{data.docents}</TableCell>
-                                            <TableCell align="left">{data.place}</TableCell>
+                                            <TableCell align="left">{data.place}
+                                                { (isItemSelected > 0) && (
+                                                    <Tooltip title="Delete">
+                                                        <Link to={`/courses/${data.id}`}>
+                                                            <IconButton aria-label="delete">
+                                                                <ArrowRight />
+                                                            </IconButton>
+                                                        </Link>
+                                                    </Tooltip>
+                                                )}
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}

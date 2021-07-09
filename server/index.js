@@ -106,6 +106,8 @@ app.get(createUrl("courses"), function (req, res) {
 });
 
 app.get(createUrl("courses/:id"), function (req, res) {
+	//console.log(req);
+
 	const {
 		params: { id },
 	} = req;
@@ -115,7 +117,7 @@ app.get(createUrl("courses/:id"), function (req, res) {
 });
 
 app.post(createUrl("courses"), jsonParser, function (req, res) {
-	//console.log(req.body);
+	console.log(req.body);
 	const name = (typeof req.body.name !== 'undefined') ? `'${req.body.name}'` : 'NULL',
 		subject = (typeof req.body.subject !== 'undefined') ? `'${req.body.subject}'` : 'NULL',
 		start = (typeof req.body.start !== 'undefined') ? `'${req.body.start}'`.replace("T", " ").slice(0,-5) + `'` : 'NULL',
@@ -130,7 +132,7 @@ app.post(createUrl("courses"), jsonParser, function (req, res) {
 		`VALUES (${name}, ${subject}, ${start}, ${end}, ${repetition}, ${times}, ${place}, ${description}, ${docents})`)
 		.then(queryResult => res.status(200).json(queryResult).end())
 		.catch(error => {
-			//console.log(error);
+			console.log(error);
 			res.status(400).end();});
 });
 
@@ -152,7 +154,7 @@ app.put(createUrl("courses"), jsonParser, function (req, res) {
 		`WHERE id = ${id}`)
 		.then(queryResult => res.status(200).json(queryResult).end())
 		.catch(error => {
-			//console.log(error);
+			console.log(error);
 			res.status(400).end();});
 });
 
