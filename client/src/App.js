@@ -4,11 +4,12 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import ResponsiveDrawer from "./components/MenuAppBar";
 import CreateAppointmentScreen from "./screens/appointments/CreateAppointmentScreen";
 import AppointmentScreen from "./screens/appointments/AppointmentScreen";
-import DisplayAppointments from "./screens/appointments/DisplayAppointments";
-import Appointment from "./components/Appointment";
+import EditAppointment from "./screens/appointments/EditAppointment";
 import {makeStyles} from "@material-ui/core/styles";
 import CourseScreen from "./screens/courses/CourseScreen";
 import CreateCourseScreen from "./screens/courses/CreateCourseScreen";
+import EditCourseScreen from "./screens/courses/EditCourseScreen";
+
 
 const useStyles = makeStyles(() => ({
 	app: {
@@ -41,25 +42,22 @@ function App() {
 							path="/appointments/:id"
 							strict
 							component={(props) => (
-								<Appointment id={props.match.params.id} />
+								<EditAppointment id={props.match.params.id} />
 							)}
 						/>
 						<Route path="/appointments" strict>
 							<AppointmentScreen />
 						</Route>
-						<Route
-							path="/courses/display/:id"
-							strict
-							component={(props) => (
-								<Appointment id={props.match.params.id} />
-							)}
-						/>
 						<Route path="/courses/create" strict>
 							<CreateCourseScreen />
 						</Route>
-						<Route path="/courses/display" strict>
-							<DisplayAppointments />
-						</Route>
+						<Route
+							path="/courses/:id"
+							strict
+							component={(props) => (
+								<EditCourseScreen id={props.match.params.id} />
+							)}
+						/>
 						<Route path="/courses" strict>
 							<CourseScreen />
 						</Route>
