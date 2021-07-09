@@ -12,7 +12,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import axios from "axios";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CreateAppointmentScreen = () => {
+	let history = useHistory();
 	const classes = useStyles();
 
 	const [name, setName] = React.useState("");
@@ -65,13 +66,14 @@ const CreateAppointmentScreen = () => {
 		setAge(event.target.value);
 	};
 
-	const handleCreateAppointment = async (e) => {
+	const handleCreateCourse = async (e) => {
 		e.preventDefault();
 		const { data } = await axios.post(
 			"http://localhost:8080/api/courses",
 			{ name, subject, start, end, repetition, times, place, description, docents },
 		);
 		console.log(data);
+		history.push("/courses");
 	};
 
 	return (
@@ -80,7 +82,7 @@ const CreateAppointmentScreen = () => {
 			<form
 				className={classes.root}
 				autoComplete="off"
-				onSubmit={(e) => handleCreateAppointment(e)}
+				onSubmit={(e) => handleCreateCourse(e)}
 			>
 				<TextField
 					id="standard-full-width"
