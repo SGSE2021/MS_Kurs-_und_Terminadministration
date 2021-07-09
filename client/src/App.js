@@ -10,7 +10,6 @@ import CourseScreen from "./screens/courses/CourseScreen";
 import CreateCourseScreen from "./screens/courses/CreateCourseScreen";
 import EditCourseScreen from "./screens/courses/EditCourseScreen";
 
-
 const useStyles = makeStyles(() => ({
 	app: {
 		'text-align': 'center',
@@ -24,7 +23,6 @@ const useStyles = makeStyles(() => ({
 		'font-size': 'calc(10px + 2vmin)',
 	},
 }));
-
 
 function App() {
 	const classes = useStyles();

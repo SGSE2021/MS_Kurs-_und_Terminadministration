@@ -60,10 +60,8 @@ const CreateAppointmentScreen = () => {
 		setEnd(date);
 	};
 
-	const [age, setAge] = React.useState("");
-
 	const handleChange = (event) => {
-		setAge(event.target.value);
+		setRepetition(event.target.value);
 	};
 
 	const handleCreateCourse = async (e) => {

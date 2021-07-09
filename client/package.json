@@ -42,6 +42,8 @@
     ]
   },
   "devDependencies": {
-    "@material-ui/pickers": "^3.3.10"
+    "@material-ui/pickers": "^3.3.10",
+    "clsx": "^1.1.1",
+    "prop-types": "^15.7.2"
   }
 }

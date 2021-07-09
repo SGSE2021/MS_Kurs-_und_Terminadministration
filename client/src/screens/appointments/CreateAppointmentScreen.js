@@ -46,7 +46,7 @@ const CreateAppointmentScreen = () => {
 	const [start, setStart] = React.useState(Date.now());
 	const [end, setEnd] = React.useState(Date.now());
 	const [repetition, setRepetition] = React.useState("");
-	const [place, setPlace] = React.useState();
+	const [place, setPlace] = React.useState(null);
 	const [description, setDescription] = React.useState("");
 	const [persons, setPersons] = React.useState("");
 
@@ -58,10 +58,8 @@ const CreateAppointmentScreen = () => {
 		setEnd(date);
 	};
 
-	const [age, setAge] = React.useState("");
-
 	const handleChange = (event) => {
-		setAge(event.target.value);
+		setRepetition(event.target.value);
 	};
 
 	const handleCreateAppointment = async (e) => {

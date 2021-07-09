@@ -18,7 +18,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import axios from "axios";
-import {ArrowLeft, ArrowRight} from "@material-ui/icons";
+import {ArrowRight} from "@material-ui/icons";
 import {Link} from "react-router-dom";
 
 function descendingComparator(a, b, orderBy) {
@@ -54,7 +54,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-    const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+    const { classes, order, orderBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
@@ -90,12 +90,9 @@ function EnhancedTableHead(props) {
 
 EnhancedTableHead.propTypes = {
     classes: PropTypes.object.isRequired,
-    numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
-    onSelectAllClick: PropTypes.func.isRequired,
     order: PropTypes.oneOf(['asc', 'desc']).isRequired,
     orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired,
 };
 
 const useToolbarStyles = makeStyles((theme) => ({
@@ -186,11 +183,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function AppointmentTable(props) {
+export default function AppointmentTable() {
 
     const [data, setData] = useState([]);
-
-    //setData(props);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -198,19 +193,20 @@ export default function AppointmentTable(props) {
             console.log(appointmentsFromApi);
             setData(appointmentsFromApi);
         };
-        fetchData().then().catch(test => console.log("error getting data from API"));
+        fetchData().then().catch(() => console.log("error getting data from API"));
     }, []);
 
     const handleDeleteClick = (e) => {
         e.preventDefault();
         const fetchData = async (key) => {
-            const {data} = await axios.delete(`http://localhost:8080/api/appointments/${selected[key]}`);
+            const {queryResult} = await axios.delete(`http://localhost:8080/api/appointments/${selected[key]}`);
+            return queryResult;
         };
         for (const key in selected) {
             fetchData(key)
-                .then(test => data.splice(data.findIndex(({id}) => id === selected[key]), 1))
-                .catch();
-        };
+                .then(() => data.splice(data.findIndex(({id}) => id === selected[key]), 1))
+                .catch(error => console.log(error));
+        }
         setSelected([]);
     };
 

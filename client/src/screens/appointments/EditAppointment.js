@@ -1,6 +1,6 @@
 import {Button, TextField} from "@material-ui/core";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {Link, useHistory} from "react-router-dom";
 import {KeyboardDateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
@@ -59,9 +59,9 @@ const EditAppointment = ({ id }) => {
 			setPersons(appointmentFromApi[0].persons);
 		};
 		fetchData().then().catch();
-	}, []);
+	}, [id]);
 
-	//TODO:Laden des Termins anzeigen
+	//TODO: Laden des Termins anzeigen
 	//if (!querySuccess) return <p>Loading Termin #{id}...</p>;
 
 	const handleStartChange = (date) => {

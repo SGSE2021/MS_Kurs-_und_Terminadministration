@@ -1,6 +1,6 @@
 import {Button, TextField} from "@material-ui/core";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {Link, useHistory} from "react-router-dom";
 import {KeyboardDateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
@@ -63,7 +63,7 @@ const EditCourseScreen = ({ id }) => {
 			setDocents(courseFromApi[0].docents);
 		};
 		fetchData().then().catch();
-	}, []);
+	}, [id]);
 
 	//TODO: Laden des Kurses anzeigen
 	//if (!querySuccess) return <p>Loading Kurs #{id}...</p>;

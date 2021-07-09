@@ -17,7 +17,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import School from "@material-ui/icons/School";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 180;
 
