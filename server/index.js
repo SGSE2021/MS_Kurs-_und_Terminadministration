@@ -37,6 +37,13 @@ async function queryDB(query) {
 	}
 }
 
+queryDB("SHOW DATABASES")
+	.then(result => console.log(result))
+	.catch();
+queryDB("SHOW TABLES")
+	.then(result => console.log(result))
+	.catch();
+
 queryDB("DROP TABLE IF EXISTS COURSE")
 	.then(result => console.log(result))
 	.catch();
@@ -57,7 +64,7 @@ queryDB("SELECT * FROM course")
 	.catch((error) => {
 		console.log(error);
 		console.log("Table course not found, trying to create it");
-		queryDB("CREATE TABLE COURSE (\n" +
+		queryDB("CREATE TABLE course (\n" +
 			"id INT PRIMARY KEY AUTO_INCREMENT, \n" +
 			"name VARCHAR(50) NOT NULL,\n" +
 			"subject INT NOT NULL,\n" +
@@ -79,7 +86,7 @@ queryDB("SELECT * FROM appointment")
 	.then()
 	.catch(() => {
 		console.log("Table appointment not found, trying to create it");
-		queryDB("CREATE TABLE APPOINTMENT (\n" +
+		queryDB("CREATE TABLE appointment (\n" +
 			"id INT PRIMARY KEY AUTO_INCREMENT, \n" +
 			"title VARCHAR(50) NOT NULL,\n" +
 			"start DATETIME NOT NULL,\n" +
