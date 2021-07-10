@@ -22,6 +22,42 @@ spec:
       containers:
       - name: courses-appointments
         image: sgse2021cr.azurecr.io/ms_courses_appointments:latest
+        env: 
+        - name: DATABASE_DNS
+          valueFrom: 
+            secretKeyRef: 
+              name: coursesdb-secret
+              key: dns
+        - name: DATABASE_USER
+          valueFrom: 
+            secretKeyRef: 
+              name: coursesdb-secret
+              key: user
+        - name: DATABASE_PASSWORD
+          valueFrom: 
+            secretKeyRef: 
+              name: coursesdb-secret
+              key: password
+        - name: DATABASE_ADMIN_PW
+          valueFrom: 
+            secretKeyRef: 
+              name: coursesdb-secret
+              key: admin_pw
+        - name: DATABASE_NAME
+          valueFrom: 
+            secretKeyRef: 
+              name: coursesdb-secret
+              key: database
+        - name: DATABASE_PORT
+          valueFrom: 
+            secretKeyRef: 
+              name: coursesdb-secret
+              key: port
+        - name: RABBIT_MQ
+          valueFrom: 
+            secretKeyRef: 
+              name: rabbitmq-secret
+              key: url
         ports:
         - containerPort: 8080
 --- 
