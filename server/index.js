@@ -7,11 +7,19 @@ const port = process.env.PORT || 8080;
 const baseUrl = "/api";
 const createUrl = (path = "") => `${baseUrl}/${path}`;
 const mariadb = require('mariadb');
+const DATABASE_DNS = process.env.DATABASE_DNS !== undefined ? process.env.DATABASE_DNS : 'localhost';
+const DATABASE_USER = process.env.DATABASE_USER !== undefined ? process.env.DATABASE_USER : 'root';
+const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD !== undefined ? process.env.DATABASE_PASSWORD : 'geheim';
+const DATABASE_ADMIN_PW = process.env.DATABASE_ADMIN_PW !== undefined ? process.env.DATABASE_ADMIN_PW : 'geheim';
+const DATABASE_NAME = process.env.DATABASE_NAME !== undefined ? process.env.DATABASE_NAME : 'kursterminadministration';
+const DATABASE_PORT = process.env.DATABASE_PORT !== undefined ? process.env.DATABASE_PORT : '3306';
+
 const pool = mariadb.createPool({
-	host: 'localhost',
-	user:'root',
-	password: 'geheim',
-	database:'kursterminadministration',
+	host: DATABASE_DNS,
+	port: DATABASE_PORT,
+	user:DATABASE_USER,
+	password: DATABASE_PASSWORD,
+	database:DATABASE_NAME,
 	connectionLimit: 5
 });
 
