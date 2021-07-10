@@ -17,8 +17,8 @@ const DATABASE_PORT = process.env.DATABASE_PORT !== undefined ? process.env.DATA
 const pool = mariadb.createPool({
 	host: DATABASE_DNS,
 	port: DATABASE_PORT,
-	user:DATABASE_USER,
-	password: DATABASE_PASSWORD,
+	user:'admin',
+	password: DATABASE_ADMIN_PW,
 	database:DATABASE_NAME,
 	connectionLimit: 5
 });
