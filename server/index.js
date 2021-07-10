@@ -11,7 +11,7 @@ const DATABASE_DNS = process.env.DATABASE_DNS !== undefined ? process.env.DATABA
 const DATABASE_USER = process.env.DATABASE_USER !== undefined ? process.env.DATABASE_USER : 'root';
 const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD !== undefined ? process.env.DATABASE_PASSWORD : 'geheim';
 const DATABASE_ADMIN_PW = process.env.DATABASE_ADMIN_PW !== undefined ? process.env.DATABASE_ADMIN_PW : 'geheim';
-const DATABASE_NAME = process.env.DATABASE_NAME !== undefined ? process.env.DATABASE_NAME : 'kursterminadministration';
+const DATABASE_NAME = process.env.DATABASE_NAME !== undefined ? process.env.DATABASE_NAME : 'test';//kursterminadministration
 const DATABASE_PORT = process.env.DATABASE_PORT !== undefined ? process.env.DATABASE_PORT : '3306';
 
 const pool = mariadb.createPool({
@@ -69,7 +69,7 @@ queryDB("SELECT * FROM appointment")
 			"repetition VARCHAR(50),\n" +
 			"place INT,\n" +
 			"description TEXT,\n" +
-			"persons TEXT")
+			"persons TEXT);")
 			.then(() => console.log("Created table appointment successfully"))
 			.catch(() => console.log("Couldn't create table appointment"))
 	});
