@@ -37,7 +37,6 @@ async function queryDB(query) {
 	}
 }
 
-
 queryDB("SELECT * FROM course")
 	.then()
 	.catch(() => {
