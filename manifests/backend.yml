@@ -24,7 +24,7 @@ spec:
         image: sgse2021cr.azurecr.io/ms_courses_appointments:latest
         ports:
         - containerPort: 8080
----
+--- 
 apiVersion: v1
 kind: Service
 metadata:
