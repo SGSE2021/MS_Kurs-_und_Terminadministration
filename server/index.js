@@ -17,8 +17,8 @@ const DATABASE_PORT = process.env.DATABASE_PORT !== undefined ? process.env.DATA
 const pool = mariadb.createPool({
 	host: DATABASE_DNS,
 	port: DATABASE_PORT,
-	user:'admin',
-	password: DATABASE_ADMIN_PW,
+	user:DATABASE_USER,
+	password: DATABASE_PASSWORD,
 	database:DATABASE_NAME,
 	connectionLimit: 5
 });
@@ -36,6 +36,14 @@ async function queryDB(query) {
 		if (conn) await conn.end();
 	}
 }
+
+
+queryDB("SHOW DATABASES")
+	.then()
+	.catch();
+queryDB("SHOW TABLES")
+	.then()
+	.catch();
 
 queryDB("SELECT * FROM course")
 	.then()
