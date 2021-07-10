@@ -39,10 +39,10 @@ async function queryDB(query) {
 
 
 queryDB("SHOW DATABASES")
-	.then()
+	.then(result => console.log(result))
 	.catch();
 queryDB("SHOW TABLES")
-	.then()
+	.then(result => console.log(result))
 	.catch();
 
 queryDB("SELECT * FROM course")
