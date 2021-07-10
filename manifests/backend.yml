@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: myapp
+  name: courses-appointments
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: myapp
+      app: courses-appointments
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -15,22 +15,22 @@ spec:
   template:
     metadata:
       labels:
-        app: myapp
+        app: courses-appointments
     spec:
       nodeSelector:
         "beta.kubernetes.io/os": linux
       containers:
-      - name: myapp
-        image: sgse2021containerregistry.azurecr.io/myapp:latest
+      - name: courses-appointments
+        image: sgse2021cr.azurecr.io/ms_courses_appointments:latest
         ports:
         - containerPort: 8080
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: myapp
+  name: courses-appointments
 spec:
   ports:
   - port: 8080
   selector:
-    app: myapp
+    app: courses-appointments
