@@ -37,6 +37,45 @@ async function queryDB(query) {
 	}
 }
 
+
+queryDB("SELECT * FROM course")
+	.then()
+	.catch(() => {
+		console.log("Table course not found, trying to create it");
+		queryDB("CREATE TABLE COURSE (\n" +
+			"id INT PRIMARY KEY AUTO_INCREMENT, \n" +
+			"name VARCHAR(50) NOT NULL,\n" +
+			"subject INT NOT NULL,\n" +
+			"start DATETIME NOT NULL,\n" +
+			"end DATETIME NOT NULL,\n" +
+			"repetition VARCHAR(50),\n" +
+			"times INT,\n" +
+			"place INT,\n" +
+			"description TEXT,\n" +
+			"docents TEXT); ")
+			.then(() => console.log("Created table course successfully"))
+			.catch(() => console.log("Couldn't create table course"))
+	});
+
+queryDB("SELECT * FROM appointment")
+	.then()
+	.catch(() => {
+		console.log("Table appointment not found, trying to create it");
+		queryDB("CREATE TABLE APPOINTMENT (\n" +
+			"id INT PRIMARY KEY AUTO_INCREMENT, \n" +
+			"title VARCHAR(50) NOT NULL,\n" +
+			"start DATETIME NOT NULL,\n" +
+			"end DATETIME NOT NULL,\n" +
+			"repetition VARCHAR(50),\n" +
+			"place INT,\n" +
+			"description TEXT,\n" +
+			"persons TEXT")
+			.then(() => console.log("Created table appointment successfully"))
+			.catch(() => console.log("Couldn't create table appointment"))
+	});
+
+
+
 app.get(createUrl(), function (req, res) {
 	res.send("Hello World");
 });
