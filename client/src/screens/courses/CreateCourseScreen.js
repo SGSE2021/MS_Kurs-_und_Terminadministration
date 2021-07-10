@@ -1,6 +1,6 @@
 import { Button, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import React from "react";
+import React, {useEffect} from "react";
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -13,7 +13,6 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import axios from "axios";
 import {Link, useHistory} from "react-router-dom";
-import Input from '@material-ui/core/Input';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -41,44 +40,42 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-	PaperProps: {
-		style: {
-			maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-			width: 250,
-		},
-	},
-};
-
-const names = [
-	'Oliver Hansen',
-	'Van Henry',
-	'April Tucker',
-	'Ralph Hubbard',
-	'Omar Alexander',
-	'Carlos Abbott',
-	'Miriam Wagner',
-	'Bradley Wilkerson',
-	'Virginia Andrews',
-	'Kelly Snyder',
-];
-
-
 const CreateAppointmentScreen = () => {
 	let history = useHistory();
 	const classes = useStyles();
 
 	const [name, setName] = React.useState("");
-	const [subject, setSubject] = React.useState([]);
+	const [subject, setSubject] = React.useState("");
+	const [subjects, setSubjects] = React.useState([]);
 	const [start, setStart] = React.useState(Date.now());
 	const [end, setEnd] = React.useState(Date.now());
 	const [repetition, setRepetition] = React.useState("");
 	const [times, setTimes] = React.useState(0);
 	const [place, setPlace] = React.useState("");
+	const [places, setPlaces] = React.useState([]);
 	const [description, setDescription] = React.useState("");
 	const [docents, setDocents] = React.useState("");
+
+	useEffect(() => {
+		const fetchSubjects = async () => {
+			const {data: subjectsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/studycourses");
+			console.log(subjectsFromApi);
+			setSubjects(subjectsFromApi);
+		};
+		const fetchPlaces = async () => {
+			const {data: placesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/studycourses");
+			console.log(placesFromApi);
+			setPlaces(placesFromApi);
+		};
+		const fetchPersons = async () => {
+			const {data: personsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/studycourses");
+			console.log(personsFromApi);
+			setDocents(personsFromApi);
+		};
+		fetchSubjects().then().catch(() => console.log("error getting data from API"));
+		fetchPlaces().then().catch(() => console.log("error getting data from API"));
+		fetchPersons().then().catch(() => console.log("error getting data from API"));
+	}, []);
 
 	const handleStartChange = (date) => {
 		setStart(date);
@@ -86,10 +83,6 @@ const CreateAppointmentScreen = () => {
 	};
 	const handleEndChange = (date) => {
 		setEnd(date);
-	};
-
-	const handleChange = (event) => {
-		setRepetition(event.target.value);
 	};
 
 	const handleCreateCourse = async (e) => {
@@ -120,28 +113,24 @@ const CreateAppointmentScreen = () => {
 					value={name}
 					onChange={(e) => setName(e.target.value)}
 				/>
-				<TextField
-					id="standard-full-width"
-					label="Studiengang"
-					variant="outlined"
-					style={{ margin: 12 }}
-					fullWidth
-					margin="normal"
-					value={subject}
-					onChange={(e) => setSubject(e.target.value)}
-				/>
-				<FormControl className={classes.formControl}>
-					<InputLabel id="demo-mutiple-name-label">Name</InputLabel>
+				<FormControl variant="outlined"
+							 style={{ margin: 12, textAlign: "left" }}
+							 fullWidth
+							 margin="normal">
+					<InputLabel id="demo-simple-select-outlined-label">Studiengang </InputLabel>
 					<Select
-						labelId="demo-mutiple-name-label"
-						id="demo-mutiple-name"
+						labelId="demo-simple-select-outlined-label"
+						id="demo-simple-select-outlined"
 						value={subject}
-						onChange={handleChange}
-						MenuProps={MenuProps}
+						onChange={(e) => setSubject(e.target.value)}
+						label="Studiengang"
 					>
-						{names.map((name) => (
-							<MenuItem key={name} value={name}>
-								{name}
+						<MenuItem value="">
+							<em>None</em>
+						</MenuItem>
+						{subjects.map((subject) => (
+							<MenuItem key={subject.id} value={subject.id}>
+								{subject.degree} {subject.name}
 							</MenuItem>
 						))}
 					</Select>
@@ -177,36 +166,45 @@ const CreateAppointmentScreen = () => {
 						}}
 					/>
 				</MuiPickersUtilsProvider>
-				<FormControl variant="outlined" className={classes.formControl}>
+				<FormControl variant="outlined"
+							 style={{ margin: 12, textAlign: "left" }}
+							 margin="normal">
 					<InputLabel id="demo-simple-select-outlined-label">Wiederholen </InputLabel>
 					<Select
 						labelId="demo-simple-select-outlined-label"
 						id="demo-simple-select-outlined"
 						value={repetition}
-						onChange={handleChange}
+						onChange={(e) => setRepetition(e.target.value)}
 						label="Wiederholen"
-						MenuProps={MenuProps}
+					>
+						<MenuItem value={0}><em>None</em></MenuItem>
+						<MenuItem value={1}>Täglich</MenuItem>
+						<MenuItem value={2}>Wöchentlich</MenuItem>
+						<MenuItem value={3}>Monatlich</MenuItem>
+					</Select>
+				</FormControl>
+				<FormControl variant="outlined"
+							 style={{ margin: 12, textAlign: "left" }}
+							 fullWidth
+							 margin="normal">
+					<InputLabel id="demo-simple-select-outlined-label">Ort </InputLabel>
+					<Select
+						labelId="demo-simple-select-outlined-label"
+						id="demo-simple-select-outlined"
+						value={place}
+						onChange={(e) => setPlace(e.target.value)}
+						label="Ort"
 					>
 						<MenuItem value="">
 							<em>None</em>
 						</MenuItem>
-						{names.map((name) => (
-							<MenuItem key={name} value={name}>
-								{name}
+						{places.map((place) => (
+							<MenuItem key={place.id} value={place.id}>
+								{place.name}
 							</MenuItem>
 						))}
 					</Select>
 				</FormControl>
-				<TextField
-					id="standard-full-width"
-					label="Ort"
-					variant="outlined"
-					style={{ margin: 12 }}
-					fullWidth
-					margin="normal"
-					value={place}
-					onChange={(e) => setPlace(e.target.value)}
-				/>
 				<TextField
 					id="standard-full-width"
 					label="Beschreibung"
