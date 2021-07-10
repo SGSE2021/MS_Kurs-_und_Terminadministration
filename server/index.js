@@ -37,28 +37,6 @@ async function queryDB(query) {
 	}
 }
 
-queryDB("SHOW DATABASES")
-	.then(result => console.log(result))
-	.catch();
-queryDB("SHOW TABLES")
-	.then(result => console.log(result))
-	.catch();
-
-queryDB("DROP TABLE IF EXISTS COURSE")
-	.then(result => console.log(result))
-	.catch();
-queryDB("DROP TABLE IF EXISTS APPOINTMENT")
-	.then(result => console.log(result))
-	.catch();
-
-
-queryDB("SHOW DATABASES")
-	.then(result => console.log(result))
-	.catch();
-queryDB("SHOW TABLES")
-	.then(result => console.log(result))
-	.catch();
-
 queryDB("SELECT * FROM course")
 	.then()
 	.catch((error) => {
