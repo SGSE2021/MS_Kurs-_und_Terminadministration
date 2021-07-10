@@ -39,7 +39,8 @@ async function queryDB(query) {
 
 queryDB("SELECT * FROM course")
 	.then()
-	.catch(() => {
+	.catch((error) => {
+		console.log(error);
 		console.log("Table course not found, trying to create it");
 		queryDB("CREATE TABLE COURSE (\n" +
 			"id INT PRIMARY KEY AUTO_INCREMENT, \n" +
