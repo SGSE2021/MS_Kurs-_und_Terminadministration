@@ -54,7 +54,10 @@ queryDB("SELECT * FROM course")
 			"description TEXT,\n" +
 			"docents TEXT); ")
 			.then(() => console.log("Created table course successfully"))
-			.catch(() => console.log("Couldn't create table course"))
+			.catch((error) => {
+				console.log(error);
+				console.log("Couldn't create table course");
+			})
 	});
 
 queryDB("SELECT * FROM appointment")
