@@ -9,10 +9,10 @@ on:
   workflow_dispatch:
   
 env:
-  IMAGE_NAME: <Image to run in pod (e.g. myApp)>
-  SERVICE_NAME: <Service name (e.g. myApp)>
-  DOCKERFILE: ./Dockerfile
-  MANIFESTFILE: <Path to deployment manifest (e.g. manifests/myapp.yaml)>
+  IMAGE_NAME: ms_courses_appointments
+  SERVICE_NAME: courses-appointments
+  DOCKERFILE: ./server/Dockerfile
+  MANIFESTFILE: manifests/backend.yml
 
 jobs:
   build:
