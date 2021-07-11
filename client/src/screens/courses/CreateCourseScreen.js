@@ -50,11 +50,12 @@ const CreateAppointmentScreen = () => {
 	const [start, setStart] = React.useState(Date.now());
 	const [end, setEnd] = React.useState(Date.now());
 	const [repetition, setRepetition] = React.useState("");
-	const [times, setTimes] = React.useState(0);
+	const [times, setTimes] = React.useState(1);
 	const [place, setPlace] = React.useState("");
 	const [places, setPlaces] = React.useState([]);
 	const [description, setDescription] = React.useState("");
-	const [docents, setDocents] = React.useState("");
+	const [docent, setDocent] = React.useState("");
+	const [docents, setDocents] = React.useState([]);
 
 	useEffect(() => {
 		const fetchSubjects = async () => {
@@ -68,7 +69,7 @@ const CreateAppointmentScreen = () => {
 			setPlaces(placesFromApi);
 		};
 		const fetchPersons = async () => {
-			const {data: personsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/studycourses");
+			const {data: personsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers");
 			console.log(personsFromApi);
 			setDocents(personsFromApi);
 		};
@@ -79,18 +80,27 @@ const CreateAppointmentScreen = () => {
 
 	const handleStartChange = (date) => {
 		setStart(date);
+		// TODO: Remove log
 		console.log(date);
 	};
 	const handleEndChange = (date) => {
 		setEnd(date);
 	};
 
+	const handleTimesChange = (number) => {
+		if (number < 0) {
+			number = 0;
+		}
+		setTimes(number);
+	};
+
 	const handleCreateCourse = async (e) => {
 		e.preventDefault();
 		const { data } = await axios.post(
 			"https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/courses",
-			{ name, subject, start, end, repetition, times, place, description, docents },
+			{ name, subject, start, end, repetition, times, place, description, docent },
 		);
+		// TODO: Remove log
 		console.log(data);
 		history.push("/courses");
 	};
@@ -167,7 +177,7 @@ const CreateAppointmentScreen = () => {
 					/>
 				</MuiPickersUtilsProvider>
 				<FormControl variant="outlined"
-							 style={{ margin: 12, textAlign: "left" }}
+							 style={{ margin: 12, textAlign: "left", minWidth: "200px" }}
 							 margin="normal">
 					<InputLabel id="demo-simple-select-outlined-label">Wiederholen </InputLabel>
 					<Select
@@ -183,6 +193,16 @@ const CreateAppointmentScreen = () => {
 						<MenuItem value={3}>Monatlich</MenuItem>
 					</Select>
 				</FormControl>
+				<TextField
+					id="outlined-number"
+					label="Anzahl"
+					type="number"
+					variant="outlined"
+					style={{ margin: 12 }}
+					margin="normal"
+					value={times}
+					onChange={(e) => handleTimesChange(e.target.value)}
+				/>
 				<FormControl variant="outlined"
 							 style={{ margin: 12, textAlign: "left" }}
 							 fullWidth
@@ -217,16 +237,28 @@ const CreateAppointmentScreen = () => {
 					value={description}
 					onChange={(e) => setDescription(e.target.value)}
 				/>
-				<TextField
-					id="standard-full-width"
-					label="Dozenten"
-					variant="outlined"
-					style={{ margin: 12 }}
-					fullWidth
-					margin="normal"
-					value={docents}
-					onChange={(e) => setDocents(e.target.value)}
-				/>
+				<FormControl variant="outlined"
+							 style={{ margin: 12, textAlign: "left" }}
+							 fullWidth
+							 margin="normal">
+					<InputLabel id="demo-simple-select-outlined-label">Dozenten </InputLabel>
+					<Select
+						labelId="demo-simple-select-outlined-label"
+						id="demo-simple-select-outlined"
+						value={docent}
+						onChange={(e) => setDocent(e.target.value)}
+						label="Dozenten"
+					>
+						<MenuItem value="">
+							<em>None</em>
+						</MenuItem>
+						{docents.map((docent) => (
+							<MenuItem key={docent.id} value={docent.id}>
+								{docent.firstname} {docent.lastname}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
 
 				<Link to="/courses">
 					<Button>Abbrechen</Button>

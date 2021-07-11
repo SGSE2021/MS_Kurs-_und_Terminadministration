@@ -40,18 +40,21 @@ const EditCourseScreen = ({ id }) => {
 
 	const [name, setName] = React.useState("");
 	const [subject, setSubject] = React.useState("");
+	const [subjects, setSubjects] = React.useState([]);
 	const [start, setStart] = React.useState(Date.now());
 	const [end, setEnd] = React.useState(Date.now());
 	const [repetition, setRepetition] = React.useState("");
-	const [times, setTimes] = React.useState(0);
-	const [place, setPlace] = React.useState(null);
+	const [times, setTimes] = React.useState(1);
+	const [place, setPlace] = React.useState("");
+	const [places, setPlaces] = React.useState([]);
 	const [description, setDescription] = React.useState("");
-	const [docents, setDocents] = React.useState("");
+	const [docent, setDocent] = React.useState("");
+	const [docents, setDocents] = React.useState([]);
 
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const {data: courseFromApi} = await axios.get(`http://localhost:8080/api/courses/${id}`);
+			const {data: courseFromApi} = await axios.get(`https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/courses/${id}`);
 			setName(courseFromApi[0].name);
 			setSubject(courseFromApi[0].subject);
 			setStart(courseFromApi[0].start);
@@ -60,9 +63,28 @@ const EditCourseScreen = ({ id }) => {
 			setTimes(courseFromApi[0].times);
 			setPlace(courseFromApi[0].place);
 			setDescription(courseFromApi[0].description);
-			setDocents(courseFromApi[0].docents);
+			setDocent(courseFromApi[0].docents);
 		};
+		const fetchSubjects = async () => {
+			const {data: subjectsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/studycourses");
+			console.log(subjectsFromApi);
+			setSubjects(subjectsFromApi);
+		};
+		const fetchPlaces = async () => {
+			const {data: placesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/studycourses");
+			console.log(placesFromApi);
+			setPlaces(placesFromApi);
+		};
+		const fetchPersons = async () => {
+			const {data: personsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers");
+			console.log(personsFromApi);
+			setDocents(personsFromApi);
+		};
+		fetchSubjects().then().catch(() => console.log("error getting data from API"));
+		fetchPlaces().then().catch(() => console.log("error getting data from API"));
+		fetchPersons().then().catch(() => console.log("error getting data from API"));
 		fetchData().then().catch();
+
 	}, [id]);
 
 	//TODO: Laden des Kurses anzeigen
@@ -70,23 +92,27 @@ const EditCourseScreen = ({ id }) => {
 
 	const handleStartChange = (date) => {
 		setStart(date);
-		//TODO: Remove log
+		// TODO: Remove log
 		console.log(date);
 	};
 	const handleEndChange = (date) => {
 		setEnd(date);
 	};
 
-	const handleChange = (event) => {
-		setRepetition(event.target.value);
+	const handleTimesChange = (number) => {
+		if (number < 0) {
+			number = 0;
+		}
+		setTimes(number);
 	};
 
 	const handleCreateCourse = async (e) => {
 		e.preventDefault();
 		const { data } = await axios.put(
-			"http://localhost:8080/api/courses",
-			{ id, name, subject, start, end, repetition, times, place, description, docents },
+			"https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/courses",
+			{ id, name, subject, start, end, repetition, times, place, description, docent },
 		);
+		// TODO: Remove log
 		console.log(data);
 		history.push("/courses");
 	};
@@ -109,16 +135,29 @@ const EditCourseScreen = ({ id }) => {
 					value={name}
 					onChange={(e) => setName(e.target.value)}
 				/>
-				<TextField
-					id="standard-full-width"
-					label="Studiengang"
-					variant="outlined"
-					style={{ margin: 12 }}
-					fullWidth
-					margin="normal"
-					value={subject}
-					onChange={(e) => setSubject(e.target.value)}
-				/>
+				<FormControl variant="outlined"
+							 style={{ margin: 12, textAlign: "left" }}
+							 fullWidth
+							 margin="normal">
+					<InputLabel id="demo-simple-select-outlined-label">Studiengang </InputLabel>
+					<Select
+						labelId="demo-simple-select-outlined-label"
+						id="demo-simple-select-outlined"
+						value={subject}
+						onChange={(e) => setSubject(e.target.value)}
+						label="Studiengang"
+					>
+						<MenuItem value="">
+							<em>None</em>
+						</MenuItem>
+						{subjects.map((subject) => (
+							<MenuItem key={subject.id} value={subject.id}>
+								{subject.degree} {subject.name}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
 					<p className={classes.text}>Beginn:</p>
 					<KeyboardDateTimePicker
@@ -149,33 +188,55 @@ const EditCourseScreen = ({ id }) => {
 						}}
 					/>
 				</MuiPickersUtilsProvider>
-				<FormControl variant="outlined" className={classes.formControl}>
+				<FormControl variant="outlined"
+							 style={{ margin: 12, textAlign: "left", minWidth: "200px" }}
+							 margin="normal">
 					<InputLabel id="demo-simple-select-outlined-label">Wiederholen </InputLabel>
 					<Select
 						labelId="demo-simple-select-outlined-label"
 						id="demo-simple-select-outlined"
 						value={repetition}
-						onChange={handleChange}
+						onChange={(e) => setRepetition(e.target.value)}
 						label="Wiederholen"
+					>
+						<MenuItem value={0}><em>None</em></MenuItem>
+						<MenuItem value={1}>Täglich</MenuItem>
+						<MenuItem value={2}>Wöchentlich</MenuItem>
+						<MenuItem value={3}>Monatlich</MenuItem>
+					</Select>
+				</FormControl>
+				<TextField
+					id="outlined-number"
+					label="Anzahl"
+					type="number"
+					variant="outlined"
+					style={{ margin: 12 }}
+					margin="normal"
+					value={times}
+					onChange={(e) => handleTimesChange(e.target.value)}
+				/>
+				<FormControl variant="outlined"
+							 style={{ margin: 12, textAlign: "left" }}
+							 fullWidth
+							 margin="normal">
+					<InputLabel id="demo-simple-select-outlined-label">Ort </InputLabel>
+					<Select
+						labelId="demo-simple-select-outlined-label"
+						id="demo-simple-select-outlined"
+						value={place}
+						onChange={(e) => setPlace(e.target.value)}
+						label="Ort"
 					>
 						<MenuItem value="">
 							<em>None</em>
 						</MenuItem>
-						<MenuItem value={10}>Täglich</MenuItem>
-						<MenuItem value={20}>Wöchentlich</MenuItem>
-						<MenuItem value={30}>Monatlich</MenuItem>
+						{places.map((place) => (
+							<MenuItem key={place.id} value={place.id}>
+								{place.name}
+							</MenuItem>
+						))}
 					</Select>
 				</FormControl>
-				<TextField
-					id="standard-full-width"
-					label="Ort"
-					variant="outlined"
-					style={{ margin: 12 }}
-					fullWidth
-					margin="normal"
-					value={place}
-					onChange={(e) => setPlace(e.target.value)}
-				/>
 				<TextField
 					id="standard-full-width"
 					label="Beschreibung"
@@ -188,16 +249,28 @@ const EditCourseScreen = ({ id }) => {
 					value={description}
 					onChange={(e) => setDescription(e.target.value)}
 				/>
-				<TextField
-					id="standard-full-width"
-					label="Dozenten"
-					variant="outlined"
-					style={{ margin: 12 }}
-					fullWidth
-					margin="normal"
-					value={docents}
-					onChange={(e) => setDocents(e.target.value)}
-				/>
+				<FormControl variant="outlined"
+							 style={{ margin: 12, textAlign: "left" }}
+							 fullWidth
+							 margin="normal">
+					<InputLabel id="demo-simple-select-outlined-label">Dozenten </InputLabel>
+					<Select
+						labelId="demo-simple-select-outlined-label"
+						id="demo-simple-select-outlined"
+						value={docent}
+						onChange={(e) => setDocent(e.target.value)}
+						label="Dozenten"
+					>
+						<MenuItem value="">
+							<em>None</em>
+						</MenuItem>
+						{docents.map((docent) => (
+							<MenuItem key={docent.id} value={docent.id}>
+								{docent.firstname} {docent.lastname}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
 
 				<Link to="/courses">
 					<Button>Abbrechen</Button>
@@ -207,5 +280,6 @@ const EditCourseScreen = ({ id }) => {
 		</>
 	);
 };
+
 
 export default EditCourseScreen;

@@ -190,7 +190,7 @@ export default function CourseTable() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const {data: coursesFromApi} = await axios.get("http://localhost:8080/api/courses");
+            const {data: coursesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/courses");
             console.log(coursesFromApi);
             setData(coursesFromApi);
         };
@@ -200,7 +200,7 @@ export default function CourseTable() {
     const handleDeleteClick = (e) => {
         e.preventDefault();
         const fetchData = async (key) => {
-            const {queryResult} = await axios.delete(`http://localhost:8080/api/courses/${selected[key]}`);
+            const {queryResult} = await axios.delete(`https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/${selected[key]}`);
             return queryResult;
         };
         for (const key in selected) {

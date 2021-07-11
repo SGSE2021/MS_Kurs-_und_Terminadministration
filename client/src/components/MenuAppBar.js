@@ -82,9 +82,11 @@ function ResponsiveDrawer(props) {
 			<School />
 			<Divider />
 			<List>
+				<Link to="/">
 				<ListItem button key="Startseite">
 					<ListItemText primary="Startseite" />
 				</ListItem>
+				</Link>
 				<ListItem button key="Nachrichten">
 					<ListItemText primary="Nachrichten" />
 				</ListItem>

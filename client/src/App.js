@@ -40,7 +40,6 @@ function App() {
 					<ResponsiveDrawer />
 					{(role === 2) ? (
 						<Switch>
-
 							<Route path="/appointments/create" strict>
 								<CreateAppointmentScreen />
 							</Route>
@@ -66,6 +65,9 @@ function App() {
 							/>
 							<Route path="/courses" strict>
 								<CourseScreen />
+							</Route>
+							<Route path="/" explicit>
+								Startseite
 							</Route>
 						</Switch>) : (
 						<p>Keine Berechtigung</p>
