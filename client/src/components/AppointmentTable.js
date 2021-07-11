@@ -189,7 +189,7 @@ export default function AppointmentTable() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const {data: appointmentsFromApi} = await axios.get("http://localhost:8080/api/appointments");
+            const {data: appointmentsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/appointments");
             console.log(appointmentsFromApi);
             setData(appointmentsFromApi);
         };
@@ -199,7 +199,7 @@ export default function AppointmentTable() {
     const handleDeleteClick = (e) => {
         e.preventDefault();
         const fetchData = async (key) => {
-            const {queryResult} = await axios.delete(`http://localhost:8080/api/appointments/${selected[key]}`);
+            const {queryResult} = await axios.delete(`https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/appointments/${selected[key]}`);
             return queryResult;
         };
         for (const key in selected) {
