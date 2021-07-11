@@ -1,6 +1,6 @@
 import { Button, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import React from "react";
+import React, {useEffect} from "react";
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -46,20 +46,32 @@ const CreateAppointmentScreen = () => {
 	const [start, setStart] = React.useState(Date.now());
 	const [end, setEnd] = React.useState(Date.now());
 	const [repetition, setRepetition] = React.useState("");
-	const [place, setPlace] = React.useState(null);
+	const [place, setPlace] = React.useState("");
+	const [places, setPlaces] = React.useState([]);
 	const [description, setDescription] = React.useState("");
 	const [persons, setPersons] = React.useState("");
+	const [personsArray, setPersonsArray] = React.useState([]);
+
+	useEffect(() => {
+		const fetchPlaces = async () => {
+			const {data: placesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/studycourses");
+			console.log(placesFromApi);
+			setPlaces(placesFromApi);
+		};
+		const fetchPersons = async () => {
+			const {data: lecturersFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers");
+			console.log(lecturersFromApi);
+			setPersonsArray(lecturersFromApi);
+		};
+		fetchPlaces().then().catch(() => console.log("error getting data from API"));
+		fetchPersons().then().catch(() => console.log("error getting data from API"));
+	}, []);
 
 	const handleStartChange = (date) => {
 		setStart(date);
-		console.log(date);
 	};
 	const handleEndChange = (date) => {
 		setEnd(date);
-	};
-
-	const handleChange = (event) => {
-		setRepetition(event.target.value);
 	};
 
 	const handleCreateAppointment = async (e) => {
@@ -68,6 +80,7 @@ const CreateAppointmentScreen = () => {
 			"https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/appointments",
 			{ title, start, end, repetition, place, description, persons },
 		);
+		// TODO: Remove log
 		console.log(data);
 		history.push("/appointments");
 	};
@@ -126,27 +139,37 @@ const CreateAppointmentScreen = () => {
 						labelId="demo-simple-select-outlined-label"
 						id="demo-simple-select-outlined"
 						value={repetition}
-						onChange={handleChange}
+						onChange={(e) => setRepetition(e.target.value)}
 						label="Wiederholen"
+					>
+						<MenuItem value={0}><em>None</em></MenuItem>
+						<MenuItem value={1}>Täglich</MenuItem>
+						<MenuItem value={2}>Wöchentlich</MenuItem>
+						<MenuItem value={3}>Monatlich</MenuItem>
+					</Select>
+				</FormControl>
+				<FormControl variant="outlined"
+							 style={{ margin: 12, textAlign: "left" }}
+							 fullWidth
+							 margin="normal">
+					<InputLabel id="demo-simple-select-outlined-label">Ort </InputLabel>
+					<Select
+						labelId="demo-simple-select-outlined-label"
+						id="demo-simple-select-outlined"
+						value={place}
+						onChange={(e) => setPlace(e.target.value)}
+						label="Ort"
 					>
 						<MenuItem value="">
 							<em>None</em>
 						</MenuItem>
-						<MenuItem value={10}>Täglich</MenuItem>
-						<MenuItem value={20}>Wöchentlich</MenuItem>
-						<MenuItem value={30}>Monatlich</MenuItem>
+						{places.map((place) => (
+							<MenuItem key={place.id} value={place.id}>
+								{place.name}
+							</MenuItem>
+						))}
 					</Select>
 				</FormControl>
-				<TextField
-					id="standard-full-width"
-					label="Ort"
-					variant="outlined"
-					style={{ margin: 12 }}
-					fullWidth
-					margin="normal"
-					value={place}
-					onChange={(e) => setPlace(e.target.value)}
-				/>
 				<TextField
 					id="standard-full-width"
 					label="Beschreibung"
@@ -159,17 +182,28 @@ const CreateAppointmentScreen = () => {
 					value={description}
 					onChange={(e) => setDescription(e.target.value)}
 				/>
-				<TextField
-					id="standard-full-width"
-					label="Personen"
-					variant="outlined"
-					style={{ margin: 12 }}
-					fullWidth
-					margin="normal"
-					value={persons}
-					onChange={(e) => setPersons(e.target.value)}
-				/>
-
+				<FormControl variant="outlined"
+							 style={{ margin: 12, textAlign: "left" }}
+							 fullWidth
+							 margin="normal">
+					<InputLabel id="demo-simple-select-outlined-label">Personen </InputLabel>
+					<Select
+						labelId="demo-simple-select-outlined-label"
+						id="demo-simple-select-outlined"
+						value={persons}
+						onChange={(e) => setPersons(e.target.value)}
+						label="Personen"
+					>
+						<MenuItem value="">
+							<em>None</em>
+						</MenuItem>
+						{personsArray.map((person) => (
+							<MenuItem key={person.id} value={person.id}>
+								{person.firstname} {person.lastname}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
 				<Link to="/appointments">
 					<Button>Abbrechen</Button>
 				</Link>

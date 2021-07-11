@@ -54,8 +54,8 @@ const CreateAppointmentScreen = () => {
 	const [place, setPlace] = React.useState("");
 	const [places, setPlaces] = React.useState([]);
 	const [description, setDescription] = React.useState("");
-	const [docent, setDocent] = React.useState("");
-	const [docents, setDocents] = React.useState([]);
+	const [docents, setDocents] = React.useState("");
+	const [lecturers, setLecturers] = React.useState([]);
 
 	useEffect(() => {
 		const fetchSubjects = async () => {
@@ -69,9 +69,9 @@ const CreateAppointmentScreen = () => {
 			setPlaces(placesFromApi);
 		};
 		const fetchPersons = async () => {
-			const {data: personsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers");
-			console.log(personsFromApi);
-			setDocents(personsFromApi);
+			const {data: lecturersFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers");
+			console.log(lecturersFromApi);
+			setLecturers(lecturersFromApi);
 		};
 		fetchSubjects().then().catch(() => console.log("error getting data from API"));
 		fetchPlaces().then().catch(() => console.log("error getting data from API"));
@@ -98,7 +98,7 @@ const CreateAppointmentScreen = () => {
 		e.preventDefault();
 		const { data } = await axios.post(
 			"https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/courses",
-			{ name, subject, start, end, repetition, times, place, description, docent },
+			{ name, subject, start, end, repetition, times, place, description, docents },
 		);
 		// TODO: Remove log
 		console.log(data);
@@ -245,14 +245,14 @@ const CreateAppointmentScreen = () => {
 					<Select
 						labelId="demo-simple-select-outlined-label"
 						id="demo-simple-select-outlined"
-						value={docent}
-						onChange={(e) => setDocent(e.target.value)}
+						value={docents}
+						onChange={(e) => setDocents(e.target.value)}
 						label="Dozenten"
 					>
 						<MenuItem value="">
 							<em>None</em>
 						</MenuItem>
-						{docents.map((docent) => (
+						{lecturers.map((docent) => (
 							<MenuItem key={docent.id} value={docent.id}>
 								{docent.firstname} {docent.lastname}
 							</MenuItem>

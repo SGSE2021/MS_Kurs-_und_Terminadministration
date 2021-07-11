@@ -191,6 +191,10 @@ export default function CourseTable() {
     useEffect(() => {
         const fetchData = async () => {
             const {data: coursesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/courses");
+            for (let i = 0; i < coursesFromApi.length; i++) {
+                const {data: result} = await axios.get(`https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers/${coursesFromApi[i].docents}`);
+                coursesFromApi[i].docents = (result != null) ? result.firstname + " " + result.lastname : "Dozent nicht gefunden";
+            }
             console.log(coursesFromApi);
             setData(coursesFromApi);
         };
@@ -226,8 +230,8 @@ export default function CourseTable() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = data.map((n) => n.id);
-            setSelected(newSelecteds);
+            const newSelected = data.map((n) => n.id);
+            setSelected(newSelected);
             return;
         }
         setSelected([]);
@@ -249,10 +253,7 @@ export default function CourseTable() {
                 selected.slice(selectedIndex + 1),
             );
         }
-
         setSelected(newSelected);
-        console.log(data);
-        console.log(selected);
     };
 
     const handleChangePage = (event, newPage) => {
@@ -305,7 +306,11 @@ export default function CourseTable() {
                                             selected={isItemSelected}
                                         >
                                             <TableCell component="th" align="left" id={labelId} scope="row" padding="none">
-                                                {data.start != null ? (new Date(data.start)).toLocaleString() : data.start}
+                                                {data.start != null ?
+                                                    (new Date(data.start)).toLocaleString([],
+                                                        {weekday: "long",year: "numeric" ,month: "short", day: "2-digit",
+                                                            hour: '2-digit', minute:'2-digit'}) + " Uhr"
+                                                    : data.start}
                                             </TableCell>
                                             <TableCell align="left">{data.name}</TableCell>
                                             <TableCell align="left">{data.docents}</TableCell>

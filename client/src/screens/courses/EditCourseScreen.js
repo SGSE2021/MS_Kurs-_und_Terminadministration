@@ -48,8 +48,8 @@ const EditCourseScreen = ({ id }) => {
 	const [place, setPlace] = React.useState("");
 	const [places, setPlaces] = React.useState([]);
 	const [description, setDescription] = React.useState("");
-	const [docent, setDocent] = React.useState("");
-	const [docents, setDocents] = React.useState([]);
+	const [docents, setDocents] = React.useState("");
+	const [lecturers, setLecturers] = React.useState([]);
 
 
 	useEffect(() => {
@@ -63,7 +63,7 @@ const EditCourseScreen = ({ id }) => {
 			setTimes(courseFromApi[0].times);
 			setPlace(courseFromApi[0].place);
 			setDescription(courseFromApi[0].description);
-			setDocent(courseFromApi[0].docents);
+			setDocents(courseFromApi[0].docents);
 		};
 		const fetchSubjects = async () => {
 			const {data: subjectsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/studycourses");
@@ -76,9 +76,9 @@ const EditCourseScreen = ({ id }) => {
 			setPlaces(placesFromApi);
 		};
 		const fetchPersons = async () => {
-			const {data: personsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers");
-			console.log(personsFromApi);
-			setDocents(personsFromApi);
+			const {data: lecturersFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers");
+			console.log(lecturersFromApi);
+			setLecturers(lecturersFromApi);
 		};
 		fetchSubjects().then().catch(() => console.log("error getting data from API"));
 		fetchPlaces().then().catch(() => console.log("error getting data from API"));
@@ -110,7 +110,7 @@ const EditCourseScreen = ({ id }) => {
 		e.preventDefault();
 		const { data } = await axios.put(
 			"https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/courses",
-			{ id, name, subject, start, end, repetition, times, place, description, docent },
+			{ id, name, subject, start, end, repetition, times, place, description, docents },
 		);
 		// TODO: Remove log
 		console.log(data);
@@ -257,14 +257,14 @@ const EditCourseScreen = ({ id }) => {
 					<Select
 						labelId="demo-simple-select-outlined-label"
 						id="demo-simple-select-outlined"
-						value={docent}
-						onChange={(e) => setDocent(e.target.value)}
+						value={docents}
+						onChange={(e) => setDocents(e.target.value)}
 						label="Dozenten"
 					>
 						<MenuItem value="">
 							<em>None</em>
 						</MenuItem>
-						{docents.map((docent) => (
+						{lecturers.map((docent) => (
 							<MenuItem key={docent.id} value={docent.id}>
 								{docent.firstname} {docent.lastname}
 							</MenuItem>

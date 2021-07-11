@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import "date-fns";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import ResponsiveDrawer from "./components/MenuAppBar";
@@ -25,6 +25,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 function App() {
+
+	const [title, setTitle] = useState("Startseite");
+
 	const classes = useStyles();
 	localStorage.setItem('current-user',"{\"uid\":\"dSwafL2b0sQcYxJgmCpzcfkh3b43\",\"firstname\":\"Dennis\",\"lastname\":\"Admin\",\"role\":2}");
 	const currentUserString = localStorage.getItem( "current-user" );
