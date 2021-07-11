@@ -34,7 +34,7 @@ function App() {
 	//TODO: Check user with uid over user Api
 
 	return (
-		<Router>
+		<Router basename="/courses">
 			<div className={classes.app}>
 				<header className={classes.appheader}>
 					<ResponsiveDrawer />
