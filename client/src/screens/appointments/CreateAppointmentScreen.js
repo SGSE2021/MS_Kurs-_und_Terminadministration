@@ -65,7 +65,7 @@ const CreateAppointmentScreen = () => {
 	const handleCreateAppointment = async (e) => {
 		e.preventDefault();
 		const { data } = await axios.post(
-			"http://localhost:8080/api/appointments",
+			"https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/appointments",
 			{ title, start, end, repetition, place, description, persons },
 		);
 		console.log(data);
