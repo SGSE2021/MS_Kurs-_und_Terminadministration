@@ -13,6 +13,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import axios from "axios";
 import {Link, useHistory} from "react-router-dom";
+import {Helmet} from "react-helmet";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -46,7 +47,7 @@ const CreateAppointmentScreen = () => {
 	const [start, setStart] = React.useState(new Date(Date.now()));
 	const [end, setEnd] = React.useState(new Date(Date.now()));
 	const [repetition, setRepetition] = React.useState("");
-	const [place, setPlace] = React.useState("");
+	const [place, setPlace] = React.useState(0);
 	const [places, setPlaces] = React.useState([]);
 	const [description, setDescription] = React.useState("");
 	const [persons, setPersons] = React.useState([]);
@@ -54,7 +55,7 @@ const CreateAppointmentScreen = () => {
 
 	useEffect(() => {
 		const fetchPlaces = async () => {
-			const {data: placesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/studycourses");
+			const {data: placesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/booking-api/rooms/");
 			console.log(placesFromApi);
 			setPlaces(placesFromApi);
 		};
@@ -79,17 +80,19 @@ const CreateAppointmentScreen = () => {
 
 	const handleCreateAppointment = async (e) => {
 		e.preventDefault();
-		const { data } = await axios.post(
+		console.log({ title, start, end, repetition, place, description, persons });
+		await axios.post(
 			"https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/appointments",
 			{ title, start, end, repetition, place, description, persons },
 		);
-		// TODO: Remove log
-		console.log(data);
 		history.push("/appointments");
 	};
 
 	return (
 		<>
+			<Helmet>
+				<title>Termin erstellen</title>
+			</Helmet>
 			<p>Termin erstellen</p>
 			<form
 				className={classes.root}
@@ -114,7 +117,7 @@ const CreateAppointmentScreen = () => {
 						format="yyyy/MM/dd HH:mm"
 						margin="normal"
 						id="date-picker-inline"
-						label="Date picker inline"
+						label="Beginn"
 						value={start}
 						onChange={handleStartChange}
 						KeyboardButtonProps={{
@@ -128,7 +131,7 @@ const CreateAppointmentScreen = () => {
 						format="yyyy/MM/dd HH:mm"
 						margin="normal"
 						id="date-picker-inline"
-						label="Date picker inline"
+						label="Ende"
 						value={end}
 						onChange={handleEndChange}
 						KeyboardButtonProps={{
@@ -145,7 +148,7 @@ const CreateAppointmentScreen = () => {
 						onChange={(e) => setRepetition(e.target.value)}
 						label="Wiederholen"
 					>
-						<MenuItem value={0}><em>None</em></MenuItem>
+						<MenuItem value={0}><em>Nie</em></MenuItem>
 						<MenuItem value={1}>Täglich</MenuItem>
 						<MenuItem value={2}>Wöchentlich</MenuItem>
 						<MenuItem value={3}>Monatlich</MenuItem>
@@ -163,8 +166,8 @@ const CreateAppointmentScreen = () => {
 						onChange={(e) => setPlace(e.target.value)}
 						label="Ort"
 					>
-						<MenuItem value="">
-							<em>None</em>
+						<MenuItem value={0}>
+							<em>Keiner</em>
 						</MenuItem>
 						{places.map((place) => (
 							<MenuItem key={place.id} value={place.id}>
@@ -198,9 +201,6 @@ const CreateAppointmentScreen = () => {
 						onChange={(e) => setPersons(e.target.value)}
 						label="Personen"
 					>
-						<MenuItem value="">
-							<em>None</em>
-						</MenuItem>
 						{personsArray.map((person) => (
 							<MenuItem key={person.id} value={person.id}>
 								{person.name}
@@ -211,7 +211,7 @@ const CreateAppointmentScreen = () => {
 				<Link to="/appointments">
 					<Button>Abbrechen</Button>
 				</Link>
-				<Button type="submit">Termin anlegen</Button>
+				<div><Button type="submit">Termin anlegen</Button></div>
 			</form>
 		</>
 	);

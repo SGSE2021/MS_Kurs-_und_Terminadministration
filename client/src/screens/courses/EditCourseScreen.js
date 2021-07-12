@@ -9,6 +9,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import {makeStyles} from "@material-ui/core/styles";
+import {Helmet} from "react-helmet";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -39,13 +40,13 @@ const EditCourseScreen = ({ id }) => {
 	const classes = useStyles();
 
 	const [name, setName] = React.useState("");
-	const [subject, setSubject] = React.useState("");
+	const [subject, setSubject] = React.useState(0);
 	const [subjects, setSubjects] = React.useState([]);
 	const [start, setStart] = React.useState(new Date(Date.now()));
 	const [end, setEnd] = React.useState(new Date(Date.now()));
 	const [repetition, setRepetition] = React.useState("");
 	const [times, setTimes] = React.useState(1);
-	const [place, setPlace] = React.useState("");
+	const [place, setPlace] = React.useState(0);
 	const [places, setPlaces] = React.useState([]);
 	const [description, setDescription] = React.useState("");
 	const [docents, setDocents] = React.useState([]);
@@ -69,12 +70,10 @@ const EditCourseScreen = ({ id }) => {
 		};
 		const fetchSubjects = async () => {
 			const {data: subjectsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/studycourses");
-			console.log(subjectsFromApi);
 			setSubjects(subjectsFromApi);
 		};
 		const fetchPlaces = async () => {
-			const {data: placesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/studycourses");
-			console.log(placesFromApi);
+			const {data: placesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/booking-api/rooms/");
 			setPlaces(placesFromApi);
 		};
 		const fetchLecturers = async () => {
@@ -101,13 +100,9 @@ const EditCourseScreen = ({ id }) => {
 
 	}, [id]);
 
-	//TODO: Laden des Kurses anzeigen
-	//if (!querySuccess) return <p>Loading Kurs #{id}...</p>;
 
 	const handleStartChange = (date) => {
 		setStart(date);
-		// TODO: Remove log
-		console.log(date);
 	};
 	const handleEndChange = (date) => {
 		setEnd(date);
@@ -126,13 +121,14 @@ const EditCourseScreen = ({ id }) => {
 			"https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/courses",
 			{ id, name, subject, start, end, repetition, times, place, description, docents, persons },
 		);
-		// TODO: Remove log
-		console.log(data);
 		history.push("/courses");
 	};
 
 	return (
 		<>
+			<Helmet>
+				<title>Kurs bearbeiten</title>
+			</Helmet>
 			<p>Kurs bearbeiten</p>
 			<form
 				className={classes.root}
@@ -161,8 +157,8 @@ const EditCourseScreen = ({ id }) => {
 						onChange={(e) => setSubject(e.target.value)}
 						label="Studiengang"
 					>
-						<MenuItem value="">
-							<em>None</em>
+						<MenuItem value={0}>
+							<em>Keins</em>
 						</MenuItem>
 						{subjects.map((subject) => (
 							<MenuItem key={subject.id} value={subject.id}>
@@ -213,7 +209,7 @@ const EditCourseScreen = ({ id }) => {
 						onChange={(e) => setRepetition(e.target.value)}
 						label="Wiederholen"
 					>
-						<MenuItem value={0}><em>None</em></MenuItem>
+						<MenuItem value={0}><em>Nie</em></MenuItem>
 						<MenuItem value={1}>Täglich</MenuItem>
 						<MenuItem value={2}>Wöchentlich</MenuItem>
 						<MenuItem value={3}>Monatlich</MenuItem>
@@ -241,8 +237,8 @@ const EditCourseScreen = ({ id }) => {
 						onChange={(e) => setPlace(e.target.value)}
 						label="Ort"
 					>
-						<MenuItem value="">
-							<em>None</em>
+						<MenuItem value={0}>
+							<em>Keiner</em>
 						</MenuItem>
 						{places.map((place) => (
 							<MenuItem key={place.id} value={place.id}>
@@ -276,9 +272,6 @@ const EditCourseScreen = ({ id }) => {
 						onChange={(e) => setDocents(e.target.value)}
 						label="Dozenten"
 					>
-						<MenuItem value="">
-							<em>None</em>
-						</MenuItem>
 						{lecturers.map((docent) => (
 							<MenuItem key={docent.id} value={docent.id}>
 								{docent.name}
@@ -299,9 +292,6 @@ const EditCourseScreen = ({ id }) => {
 						onChange={(e) => setPersons(e.target.value)}
 						label="Personen"
 					>
-						<MenuItem value="">
-							<em>None</em>
-						</MenuItem>
 						{personsArray.map((person) => (
 							<MenuItem key={person.id} value={person.id}>
 								{person.name}
@@ -312,7 +302,7 @@ const EditCourseScreen = ({ id }) => {
 				<Link to="/courses">
 					<Button>Abbrechen</Button>
 				</Link>
-				<Button type="submit">Kurs bearbeiten</Button>
+				<div><Button type="submit">Kurs bearbeiten</Button></div>
 			</form>
 		</>
 	);

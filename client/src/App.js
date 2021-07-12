@@ -9,6 +9,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import CourseScreen from "./screens/courses/CourseScreen";
 import CreateCourseScreen from "./screens/courses/CreateCourseScreen";
 import EditCourseScreen from "./screens/courses/EditCourseScreen";
+import {Helmet} from "react-helmet";
 
 const useStyles = makeStyles(() => ({
 	app: {
@@ -28,21 +29,24 @@ function App() {
 
 	const [title, setTitle] = useState("Startseite");
 
+	localStorage.setItem('current-user',"{\"uid\":\"dSwafL2b0sQcYxJgmCpzcfkh3b43\",\"firstname\":\"Dennis\",\"lastname\":\"Admin\",\"role\":2}");
+
 	const classes = useStyles();
+	const checkUser = () => {
+		const currentUserString = localStorage.getItem( "current-user" );
+		const currentUserObject = JSON.parse(currentUserString );
+		if (currentUserObject === null || currentUserObject === undefined) return null
+		else return currentUserObject.role;
+	}
 
-	//localStorage.setItem('current-user',"{\"uid\":\"dSwafL2b0sQcYxJgmCpzcfkh3b43\",\"firstname\":\"Dennis\",\"lastname\":\"Admin\",\"role\":2}");
-	const currentUserString = localStorage.getItem( "current-user" );
-	const currentUserObject = JSON.parse(currentUserString );
 
-	if (currentUserObject === null || currentUserObject === undefined) {
+	if (checkUser() === null) {
 		return (
 			<Router>
 				<Redirect to="/users/"/>
 			</Router>
 		)
 	}
-
-	const {role} = currentUserObject;
 
 	//TODO: Check user with uid over user Api
 
@@ -51,7 +55,7 @@ function App() {
 			<div className={classes.app}>
 				<header className={classes.appheader}>
 					<ResponsiveDrawer />
-					{(role === 2) ? (
+					{(checkUser() === 2) ? (
 						<Switch>
 							<Route path="/appointments/create/" explicit>
 								<CreateAppointmentScreen />
@@ -80,10 +84,18 @@ function App() {
 								<CourseScreen />
 							</Route>
 							<Route path="/" explicit>
+								<Helmet>
+									<title>Startseite</title>
+								</Helmet>
 								Startseite
 							</Route>
 						</Switch>) : (
-						<p>Keine Berechtigung</p>
+						<div>
+							<Helmet>
+								<title>Keine Berechtigung</title>
+							</Helmet>
+							<p>Keine Berechtigung</p>
+						</div>
 					)}
 				</header>
 			</div>

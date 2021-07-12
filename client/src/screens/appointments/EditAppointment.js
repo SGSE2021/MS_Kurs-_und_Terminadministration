@@ -9,6 +9,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import {makeStyles} from "@material-ui/core/styles";
+import {Helmet} from "react-helmet";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -42,7 +43,7 @@ const EditAppointment = ({ id }) => {
 	const [start, setStart] = React.useState(new Date(Date.now()));
 	const [end, setEnd] = React.useState(new Date(Date.now()));
 	const [repetition, setRepetition] = React.useState("");
-	const [place, setPlace] = React.useState("");
+	const [place, setPlace] = React.useState(0);
 	const [places, setPlaces] = React.useState([]);
 	const [description, setDescription] = React.useState("");
 	const [persons, setPersons] = React.useState([]);
@@ -61,7 +62,7 @@ const EditAppointment = ({ id }) => {
 			setPersons(appointmentFromApi[0].persons.split(','));
 		};
 		const fetchPlaces = async () => {
-			const {data: placesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/studycourses");
+			const {data: placesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/booking-api/rooms/");
 			console.log(placesFromApi);
 			setPlaces(placesFromApi);
 		};
@@ -77,9 +78,6 @@ const EditAppointment = ({ id }) => {
 		fetchPersons().then().catch(() => console.log("error getting data from API"));
 		fetchData().then().catch();
 	}, [id]);
-
-	//TODO: Laden des Termins anzeigen
-	//if (!querySuccess) return <p>Loading Termin #{id}...</p>;
 
 	const handleStartChange = (date) => {
 		setStart(date);
@@ -106,6 +104,9 @@ const EditAppointment = ({ id }) => {
 
 	return (
 		<>
+			<Helmet>
+				<title>Termin bearbeiten</title>
+			</Helmet>
 			<p>Termin bearbeiten</p>
 			<form
 				className={classes.root}
@@ -130,7 +131,7 @@ const EditAppointment = ({ id }) => {
 						format="yyyy/MM/dd HH:mm"
 						margin="normal"
 						id="date-picker-inline"
-						label="Date picker inline"
+						label="Start"
 						value={start}
 						onChange={handleStartChange}
 						KeyboardButtonProps={{
@@ -144,7 +145,7 @@ const EditAppointment = ({ id }) => {
 						format="yyyy/MM/dd HH:mm"
 						margin="normal"
 						id="date-picker-inline"
-						label="Date picker inline"
+						label="Ende"
 						value={end}
 						onChange={handleEndChange}
 						KeyboardButtonProps={{
@@ -161,7 +162,7 @@ const EditAppointment = ({ id }) => {
 						onChange={handleChange}
 						label="Wiederholen"
 					>
-						<MenuItem value={0}><em>None</em></MenuItem>
+						<MenuItem value={0}><em>Nie</em></MenuItem>
 						<MenuItem value={1}>Täglich</MenuItem>
 						<MenuItem value={2}>Wöchentlich</MenuItem>
 						<MenuItem value={3}>Monatlich</MenuItem>
@@ -179,8 +180,8 @@ const EditAppointment = ({ id }) => {
 						onChange={(e) => setPlace(e.target.value)}
 						label="Ort"
 					>
-						<MenuItem value="">
-							<em>None</em>
+						<MenuItem value={0}>
+							<em>Keiner</em>
 						</MenuItem>
 						{places.map((place) => (
 							<MenuItem key={place.id} value={place.id}>
@@ -214,9 +215,6 @@ const EditAppointment = ({ id }) => {
 						onChange={(e) => setPersons(e.target.value)}
 						label="Personen"
 					>
-						<MenuItem value="">
-							<em>None</em>
-						</MenuItem>
 						{personsArray.map((person) => (
 							<MenuItem key={person.id} value={person.id}>
 								{person.name}
@@ -227,7 +225,7 @@ const EditAppointment = ({ id }) => {
 				<Link to="/appointments">
 					<Button>Abbrechen</Button>
 				</Link>
-				<Button type="submit">Termin ändern</Button>
+				<div><Button type="submit">Termin ändern</Button></div>
 			</form>
 		</>
 	);

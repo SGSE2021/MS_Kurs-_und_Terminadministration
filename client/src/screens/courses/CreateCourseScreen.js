@@ -13,6 +13,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import axios from "axios";
 import {Link, useHistory} from "react-router-dom";
+import {Helmet} from "react-helmet";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -45,13 +46,13 @@ const CreateAppointmentScreen = () => {
 	const classes = useStyles();
 
 	const [name, setName] = React.useState("");
-	const [subject, setSubject] = React.useState("");
+	const [subject, setSubject] = React.useState(0);
 	const [subjects, setSubjects] = React.useState([]);
 	const [start, setStart] = React.useState(new Date(Date.now()));
 	const [end, setEnd] = React.useState(new Date(Date.now()));
 	const [repetition, setRepetition] = React.useState("");
 	const [times, setTimes] = React.useState(1);
-	const [place, setPlace] = React.useState("");
+	const [place, setPlace] = React.useState(0);
 	const [places, setPlaces] = React.useState([]);
 	const [description, setDescription] = React.useState("");
 	const [docents, setDocents] = React.useState([]);
@@ -62,12 +63,10 @@ const CreateAppointmentScreen = () => {
 	useEffect(() => {
 		const fetchSubjects = async () => {
 			const {data: subjectsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/studycourses");
-			console.log(subjectsFromApi);
 			setSubjects(subjectsFromApi);
 		};
 		const fetchPlaces = async () => {
 			const {data: placesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/booking-api/rooms/");
-			console.log(placesFromApi);
 			setPlaces(placesFromApi);
 		};
 		const fetchLecturers = async () => {
@@ -94,8 +93,6 @@ const CreateAppointmentScreen = () => {
 
 	const handleStartChange = (date) => {
 		setStart(date);
-		// TODO: Remove log
-		console.log(date);
 	};
 	const handleEndChange = (date) => {
 		setEnd(date);
@@ -110,17 +107,18 @@ const CreateAppointmentScreen = () => {
 
 	const handleCreateCourse = async (e) => {
 		e.preventDefault();
-		const { data } = await axios.post(
+		await axios.post(
 			"https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/courses",
 			{ name, subject, start, end, repetition, times, place, description, docents, persons },
 		);
-		// TODO: Remove log
-		console.log(data);
 		history.push("/courses");
 	};
 
 	return (
 		<>
+			<Helmet>
+				<title>Kurs anlegen</title>
+			</Helmet>
 			<p>Kurs anlegen</p>
 			<form
 				className={classes.root}
@@ -149,8 +147,8 @@ const CreateAppointmentScreen = () => {
 						onChange={(e) => setSubject(e.target.value)}
 						label="Studiengang"
 					>
-						<MenuItem value="">
-							<em>None</em>
+						<MenuItem value={0}>
+							<em>Keins</em>
 						</MenuItem>
 						{subjects.map((subject) => (
 							<MenuItem key={subject.id} value={subject.id}>
@@ -159,7 +157,6 @@ const CreateAppointmentScreen = () => {
 						))}
 					</Select>
 				</FormControl>
-
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
 					<p className={classes.text}>Beginn:</p>
 					<KeyboardDateTimePicker
@@ -201,7 +198,7 @@ const CreateAppointmentScreen = () => {
 						onChange={(e) => setRepetition(e.target.value)}
 						label="Wiederholen"
 					>
-						<MenuItem value={0}><em>None</em></MenuItem>
+						<MenuItem value={0}><em>Nie</em></MenuItem>
 						<MenuItem value={1}>Täglich</MenuItem>
 						<MenuItem value={2}>Wöchentlich</MenuItem>
 						<MenuItem value={3}>Monatlich</MenuItem>
@@ -229,8 +226,8 @@ const CreateAppointmentScreen = () => {
 						onChange={(e) => setPlace(e.target.value)}
 						label="Ort"
 					>
-						<MenuItem value="">
-							<em>None</em>
+						<MenuItem value={0}>
+							<em>Keiner</em>
 						</MenuItem>
 						{places.map((placesItem) => (
 							<MenuItem key={placesItem.id} value={placesItem.id}>
@@ -264,9 +261,6 @@ const CreateAppointmentScreen = () => {
 						onChange={(e) => setDocents(e.target.value)}
 						label="Dozenten"
 					>
-						<MenuItem value="">
-							<em>None</em>
-						</MenuItem>
 						{lecturers.map((docent) => (
 							<MenuItem key={docent.id} value={docent.id}>
 								{docent.name}
@@ -287,9 +281,6 @@ const CreateAppointmentScreen = () => {
 						onChange={(e) => setPersons(e.target.value)}
 						label="Personen"
 					>
-						<MenuItem value="">
-							<em>None</em>
-						</MenuItem>
 						{personsArray.map((person) => (
 							<MenuItem key={person.id} value={person.id}>
 								{person.name}
@@ -301,7 +292,7 @@ const CreateAppointmentScreen = () => {
 				<Link to="/courses">
 					<Button>Abbrechen</Button>
 				</Link>
-				<Button type="submit">Kurs anlegen</Button>
+				<div><Button type="submit">Kurs anlegen</Button></div>
 			</form>
 		</>
 	);

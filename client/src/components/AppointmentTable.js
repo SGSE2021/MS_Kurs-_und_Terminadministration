@@ -19,7 +19,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import axios from "axios";
 import {ArrowRight} from "@material-ui/icons";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -128,7 +128,7 @@ const EnhancedTableToolbar = (props) => {
         >
             {numSelected > 0 ? (
                 <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
-                    {numSelected} selected
+                    {numSelected} ausgewählt
                 </Typography>
             ) : (
                 <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
@@ -137,13 +137,13 @@ const EnhancedTableToolbar = (props) => {
             )}
 
             {numSelected > 0 ? (
-                <Tooltip title="Delete">
+                <Tooltip title="Löschen">
                     <IconButton aria-label="delete" onClick={(e) => handleClick(e)}>
                         <DeleteIcon />
                     </IconButton>
                 </Tooltip>
             ) : (
-                <Tooltip title="Filter list">
+                <Tooltip title="Filtern">
                     <IconButton aria-label="filter list">
                         <FilterListIcon />
                     </IconButton>
@@ -185,37 +185,44 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AppointmentTable() {
 
+    const history = useHistory();
+
     const [data, setData] = useState([]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const {data: appointmentsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/appointments");
-            console.log(appointmentsFromApi);
-            setData(appointmentsFromApi);
-        };
-        fetchData().then().catch(() => console.log("error getting data from API"));
-    }, []);
-
-    const handleDeleteClick = (e) => {
-        e.preventDefault();
-        const fetchData = async (key) => {
-            const {queryResult} = await axios.delete(`https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/appointments/${selected[key]}`);
-            return queryResult;
-        };
-        for (const key in selected) {
-            fetchData(key)
-                .then(() => data.splice(data.findIndex(({id}) => id === selected[key]), 1))
-                .catch(error => console.log(error));
-        }
-        setSelected([]);
-    };
-
     const classes = useStyles();
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('start');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+    const fetchData = async () => {
+        const {data: appointmentsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/appointments");
+        const {data: result} = await axios.get(`https://sgse2021-ilias.westeurope.cloudapp.azure.com/booking-api/rooms/`);
+        for (let i = 0; i < appointmentsFromApi.length; i++) {
+            if(appointmentsFromApi[i].place !== 0) appointmentsFromApi[i].place = result.find(item => parseInt(item.id) === appointmentsFromApi[i].place).name;
+            else appointmentsFromApi[i].place = "Keiner";
+        }
+        console.log(appointmentsFromApi);
+        setData(appointmentsFromApi);
+    };
+
+    useEffect(() => {
+        fetchData().then().catch(() => console.log("error getting data from API"));
+    }, []);
+
+    const handleDeleteClick = (e) => {
+        e.preventDefault();
+        const deleteData = async (key) => {
+            const {queryResult} = await axios.delete(`https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/appointments/${selected[key]}`);
+            return queryResult;
+        };
+        for (const key in selected) {
+            deleteData(key)
+                .then(() => fetchData().then().catch(() => console.log("error getting data from API")))
+                .catch(error => console.log(error));
+        }
+        setSelected([]);
+    };
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -267,71 +274,74 @@ export default function AppointmentTable() {
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
+    const MyTable = () => <Table
+        className={classes.table}
+        aria-labelledby="tableTitle"
+        aria-label="enhanced table"
+    >
+        <EnhancedTableHead
+            classes={classes}
+            numSelected={selected.length}
+            order={order}
+            orderBy={orderBy}
+            onSelectAllClick={handleSelectAllClick}
+            onRequestSort={handleRequestSort}
+            rowCount={data.length}
+        />
+        <TableBody>
+            {stableSort(data, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((data, index) => {
+                    const isItemSelected = isSelected(data.id);
+                    const labelId = `enhanced-table-checkbox-${index}`;
+
+                    return (
+                        <TableRow
+                            hover
+                            onClick={(event) => handleClick(event, data.id)}
+                            role="checkbox"
+                            aria-checked={isItemSelected}
+                            tabIndex={-1}
+                            key={data.id}
+                            selected={isItemSelected}
+                        >
+                            <TableCell component="th" align="left" id={labelId} scope="row" padding="none">
+                                {data.start != null ?
+                                    (new Date(data.start)).toLocaleString([],
+                                        {weekday: "long",year: "numeric" ,month: "short", day: "2-digit",
+                                            hour: '2-digit', minute:'2-digit'}) + " Uhr"
+                                    : data.start}
+                            </TableCell>
+                            <TableCell align="left">{data.title}</TableCell>
+                            <TableCell align="left">{data.place}
+                                { (isItemSelected > 0) && (
+                                    <Tooltip title="Bearbeiten">
+                                        <Link to={`/appointments/${data.id}`}>
+                                            <IconButton aria-label="edit">
+                                                <ArrowRight />
+                                            </IconButton>
+                                        </Link>
+                                    </Tooltip>
+                                )}
+                            </TableCell>
+                        </TableRow>
+                    );
+                })}
+            {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                </TableRow>
+            )}
+        </TableBody>
+    </Table>
+
+
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
                 <EnhancedTableToolbar numSelected={selected.length} handleClick={handleDeleteClick}/>
                 <TableContainer>
-                    <Table
-                        className={classes.table}
-                        aria-labelledby="tableTitle"
-                        aria-label="enhanced table"
-                    >
-                        <EnhancedTableHead
-                            classes={classes}
-                            numSelected={selected.length}
-                            order={order}
-                            orderBy={orderBy}
-                            onSelectAllClick={handleSelectAllClick}
-                            onRequestSort={handleRequestSort}
-                            rowCount={data.length}
-                        />
-                        <TableBody>
-                            {stableSort(data, getComparator(order, orderBy))
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((data, index) => {
-                                    const isItemSelected = isSelected(data.id);
-                                    const labelId = `enhanced-table-checkbox-${index}`;
-
-                                    return (
-                                        <TableRow
-                                            hover
-                                            onClick={(event) => handleClick(event, data.id)}
-                                            role="checkbox"
-                                            aria-checked={isItemSelected}
-                                            tabIndex={-1}
-                                            key={data.id}
-                                            selected={isItemSelected}
-                                        >
-                                            <TableCell component="th" align="left" id={labelId} scope="row" padding="none">
-                                                {data.start != null ?
-                                                    (new Date(data.start)).toLocaleString([],
-                                                        {weekday: "long",year: "numeric" ,month: "short", day: "2-digit",
-                                                            hour: '2-digit', minute:'2-digit'}) + " Uhr"
-                                                    : data.start}
-                                            </TableCell>
-                                            <TableCell align="left">{data.title}</TableCell>
-                                            <TableCell align="left">{data.place}
-                                                { (isItemSelected > 0) && (
-                                                    <Tooltip title="Delete">
-                                                        <Link to={`/appointments/${data.id}`}>
-                                                            <IconButton aria-label="delete">
-                                                                <ArrowRight />
-                                                            </IconButton>
-                                                        </Link>
-                                                    </Tooltip>
-                                                )}
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                            {emptyRows > 0 && (
-                                <TableRow style={{ height: 53 * emptyRows }}>
-                                    <TableCell colSpan={6} />
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
+                    <MyTable />
                 </TableContainer>
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}

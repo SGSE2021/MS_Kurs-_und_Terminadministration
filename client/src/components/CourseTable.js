@@ -129,7 +129,7 @@ const EnhancedTableToolbar = (props) => {
         >
             {numSelected > 0 ? (
                 <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
-                    {numSelected} selected
+                    {numSelected} ausgewählt
                 </Typography>
             ) : (
                 <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
@@ -138,17 +138,12 @@ const EnhancedTableToolbar = (props) => {
             )}
 
             {numSelected > 0 ? (
-                <Tooltip title="Delete">
+                <Tooltip title="Löschen">
                     <IconButton aria-label="delete" onClick={(e) => handleClick(e)}>
                         <DeleteIcon />
                     </IconButton>
                 </Tooltip>
-            ) : (
-                <Tooltip title="Filter list">
-                    <IconButton aria-label="filter list">
-                        <FilterListIcon />
-                    </IconButton>
-                </Tooltip>
+            ) : ( <div></div>
             )}
         </Toolbar>
     );
@@ -190,23 +185,27 @@ export default function CourseTable() {
 
     const fetchData = async () => {
         const {data: coursesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/courses");
+        const {data: result} = await axios.get(`https://sgse2021-ilias.westeurope.cloudapp.azure.com/booking-api/rooms/`);
         for (let i = 0; i < coursesFromApi.length; i++) {
+            if(coursesFromApi[i].place !== 0) coursesFromApi[i].place = result.find(item => parseInt(item.id) === coursesFromApi[i].place).name;
+            else coursesFromApi[i].place = "Keiner";
             let docents = "";
             const docentIds = coursesFromApi[i].docents.split(',');
             for (let j = 0; j < docentIds.length; j++) {
-                const {data: result} = await axios.get(`https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers/${docentIds[j]}`);
-                if (j > 0) docents = docents + ", ";
-                if (result != null) {
-                    if (result.title === "") {
-                        docents = docents + result.firstname + " " + result.lastname
-                    }
-                    else {
-                        docents = docents + result.title + " " + result.firstname + " " + result.lastname
+                if (docentIds[j] !== "") {
+                    const {data: result} = await axios.get(`https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers/${docentIds[j]}`);
+                    if (j > 0) docents = docents + ", ";
+                    if (result != null) {
+                        if (result.title === "") {
+                            docents = docents + result.firstname + " " + result.lastname
+                        } else {
+                            docents = docents + result.title + " " + result.firstname + " " + result.lastname
+                        }
+                    } else {
+                        docents = docents + "Dozent nicht gefunden";
                     }
                 }
-                else {
-                    docents = docents + "Dozent nicht gefunden";
-                }
+                else docents = "Kein Dozent";
             }
             coursesFromApi[i].docents = docents;
         }
@@ -225,12 +224,10 @@ export default function CourseTable() {
         };
         for (const key in selected) {
             deleteData(key)
-                .then(() => data.splice(data.findIndex(({id}) => id === selected[key]), 1))
+                .then(() => fetchData().then().catch(() => console.log("error getting data from API")))
                 .catch(error => console.log(error));
         }
         setSelected([]);
-
-        fetchData().then().catch(() => console.log("error getting data from API"));
     };
 
     const classes = useStyles();
