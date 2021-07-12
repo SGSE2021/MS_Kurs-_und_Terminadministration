@@ -10,6 +10,7 @@ RUN npm run build
 
 # production environment
 FROM nginx:stable-alpine
+COPY client/default.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /usr/src/app/client/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]   
