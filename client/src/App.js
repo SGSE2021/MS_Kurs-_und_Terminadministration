@@ -37,7 +37,7 @@ function App() {
 	if (currentUserObject === null || currentUserObject === undefined) {
 		return (
 			<Router>
-				<Redirect to="/users"/>
+				<Redirect to="/users/"/>
 			</Router>
 		)
 	}
@@ -53,7 +53,7 @@ function App() {
 					<ResponsiveDrawer />
 					{(role === 2) ? (
 						<Switch>
-							<Route path="/appointments/create" explicit>
+							<Route path="/appointments/create/" explicit>
 								<CreateAppointmentScreen />
 							</Route>
 							<Route
@@ -63,10 +63,10 @@ function App() {
 									<EditAppointment id={props.match.params.id} />
 								)}
 							/>
-							<Route path="/appointments" explicit>
+							<Route path="/appointments/" explicit>
 								<AppointmentScreen />
 							</Route>
-							<Route path="/courses/create" explicit>
+							<Route path="/courses/create/" explicit>
 								<CreateCourseScreen />
 							</Route>
 							<Route
@@ -76,7 +76,7 @@ function App() {
 									<EditCourseScreen id={props.match.params.id} />
 								)}
 							/>
-							<Route path="/courses" explicit>
+							<Route path="/courses/" explicit>
 								<CourseScreen />
 							</Route>
 							<Route path="/" explicit>

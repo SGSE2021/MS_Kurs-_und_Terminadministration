@@ -92,12 +92,12 @@ function ResponsiveDrawer(props) {
 						<ListItemText primary="Nachrichten" />
 					</ListItem>
 				</a>
-				<Link to="/courses">
+				<Link to="/courses/">
 					<ListItem button key="Kurse">
 						<ListItemText primary="Kurse" />
 					</ListItem>
 				</Link>
-				<Link to="/appointments">
+				<Link to="/appointments/">
 					<ListItem button key="Termine">
 						<ListItemText primary="Termine" />
 					</ListItem>
