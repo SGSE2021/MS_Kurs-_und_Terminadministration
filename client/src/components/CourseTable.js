@@ -192,10 +192,25 @@ export default function CourseTable() {
         const fetchData = async () => {
             const {data: coursesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/courses");
             for (let i = 0; i < coursesFromApi.length; i++) {
-                const {data: result} = await axios.get(`https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers/${coursesFromApi[i].docents}`);
-                coursesFromApi[i].docents = (result != null) ? result.firstname + " " + result.lastname : "Dozent nicht gefunden";
+                let docents = "";
+                const docentIds = coursesFromApi[i].docents.split(',');
+                for (let j = 0; j < docentIds.length; j++) {
+                    const {data: result} = await axios.get(`https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers/${docentIds[j]}`);
+                    if (j > 0) docents = docents + ", ";
+                    if (result != null) {
+                        if (result.title === "") {
+                            docents = docents + result.firstname + " " + result.lastname
+                        }
+                        else {
+                            docents = docents + result.title + " " + result.firstname + " " + result.lastname
+                        }
+                    }
+                    else {
+                        docents = docents + "Dozent nicht gefunden";
+                    }
+                }
+                coursesFromApi[i].docents = docents;
             }
-            console.log(coursesFromApi);
             setData(coursesFromApi);
         };
         fetchData().then().catch(() => console.log("error getting data from API"));
@@ -204,7 +219,7 @@ export default function CourseTable() {
     const handleDeleteClick = (e) => {
         e.preventDefault();
         const fetchData = async (key) => {
-            const {queryResult} = await axios.delete(`https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/${selected[key]}`);
+            const {queryResult} = await axios.delete(`https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/courses/${selected[key]}`);
             return queryResult;
         };
         for (const key in selected) {

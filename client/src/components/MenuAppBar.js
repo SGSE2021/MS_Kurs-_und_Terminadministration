@@ -87,9 +87,11 @@ function ResponsiveDrawer(props) {
 					<ListItemText primary="Startseite" />
 				</ListItem>
 				</Link>
-				<ListItem button key="Nachrichten">
-					<ListItemText primary="Nachrichten" />
-				</ListItem>
+				<a href="https://sgse2021-ilias.westeurope.cloudapp.azure.com/messages/">
+					<ListItem button key="Nachrichten">
+						<ListItemText primary="Nachrichten" />
+					</ListItem>
+				</a>
 				<Link to="/courses">
 					<ListItem button key="Kurse">
 						<ListItemText primary="Kurse" />
@@ -100,18 +102,26 @@ function ResponsiveDrawer(props) {
 						<ListItemText primary="Termine" />
 					</ListItem>
 				</Link>
-				<ListItem button key="Prüfungen">
-					<ListItemText primary="Prüfungen" />
-				</ListItem>
-				<ListItem button key="Studierende">
-					<ListItemText primary="Studierende" />
-				</ListItem>
-				<ListItem button key="Lehrende">
-					<ListItemText primary="Lehrende" />
-				</ListItem>
-				<ListItem button key="Raumbuchung">
-					<ListItemText primary="Raumbuchung" />
-				</ListItem>
+				<a href="https://sgse2021-ilias.westeurope.cloudapp.azure.com/exams/">
+					<ListItem button key="Prüfungen">
+						<ListItemText primary="Prüfungen" />
+					</ListItem>
+				</a>
+				<a href="https://sgse2021-ilias.westeurope.cloudapp.azure.com/users/students">
+					<ListItem button key="Studierende">
+						<ListItemText primary="Studierende" />
+					</ListItem>
+				</a>
+				<a href="https://sgse2021-ilias.westeurope.cloudapp.azure.com/users/lecturers">
+					<ListItem button key="Lehrende">
+						<ListItemText primary="Lehrende" />
+					</ListItem>
+				</a>
+				<a href="https://sgse2021-ilias.westeurope.cloudapp.azure.com/booking/">
+					<ListItem button key="Raumbuchung">
+						<ListItemText primary="Raumbuchung" />
+					</ListItem>
+				</a>
 				<ListItem button key="Ausloggen">
 					<ListItemText primary="Ausloggen" />
 				</ListItem>

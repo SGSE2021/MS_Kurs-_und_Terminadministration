@@ -39,13 +39,13 @@ const EditAppointment = ({ id }) => {
 	const classes = useStyles();
 
 	const [title, setTitle] = React.useState("");
-	const [start, setStart] = React.useState(Date.now());
-	const [end, setEnd] = React.useState(Date.now());
+	const [start, setStart] = React.useState(new Date(Date.now()));
+	const [end, setEnd] = React.useState(new Date(Date.now()));
 	const [repetition, setRepetition] = React.useState("");
 	const [place, setPlace] = React.useState("");
 	const [places, setPlaces] = React.useState([]);
 	const [description, setDescription] = React.useState("");
-	const [persons, setPersons] = React.useState("");
+	const [persons, setPersons] = React.useState([]);
 	const [personsArray, setPersonsArray] = React.useState([]);
 
 
@@ -58,7 +58,7 @@ const EditAppointment = ({ id }) => {
 			setRepetition(appointmentFromApi[0].repetition);
 			setPlace(appointmentFromApi[0].place);
 			setDescription(appointmentFromApi[0].description);
-			setPersons(appointmentFromApi[0].persons);
+			setPersons(appointmentFromApi[0].persons.split(','));
 		};
 		const fetchPlaces = async () => {
 			const {data: placesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/studycourses");
@@ -67,8 +67,11 @@ const EditAppointment = ({ id }) => {
 		};
 		const fetchPersons = async () => {
 			const {data: lecturersFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers");
-			console.log(lecturersFromApi);
-			setPersonsArray(lecturersFromApi);
+			let personsFromApi = lecturersFromApi.map((item) => {
+				if(item.title === "") return {id: item.id, name: item.firstname + " " + item.lastname}
+				else return {id: item.id, name: item.title + " " + item.firstname + " " + item.lastname};
+			});
+			setPersonsArray(personsFromApi);
 		};
 		fetchPlaces().then().catch(() => console.log("error getting data from API"));
 		fetchPersons().then().catch(() => console.log("error getting data from API"));
@@ -206,6 +209,7 @@ const EditAppointment = ({ id }) => {
 					<Select
 						labelId="demo-simple-select-outlined-label"
 						id="demo-simple-select-outlined"
+						multiple
 						value={persons}
 						onChange={(e) => setPersons(e.target.value)}
 						label="Personen"
@@ -215,7 +219,7 @@ const EditAppointment = ({ id }) => {
 						</MenuItem>
 						{personsArray.map((person) => (
 							<MenuItem key={person.id} value={person.id}>
-								{person.firstname} {person.lastname}
+								{person.name}
 							</MenuItem>
 						))}
 					</Select>

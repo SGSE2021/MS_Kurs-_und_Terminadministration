@@ -43,30 +43,30 @@ function App() {
 					<ResponsiveDrawer />
 					{(role === 2) ? (
 						<Switch>
-							<Route path="/appointments/create" strict>
+							<Route path="/appointments/create" explicit>
 								<CreateAppointmentScreen />
 							</Route>
 							<Route
 								path="/appointments/:id"
-								strict
+								explicit
 								component={(props) => (
 									<EditAppointment id={props.match.params.id} />
 								)}
 							/>
-							<Route path="/appointments" strict>
+							<Route path="/appointments" explicit>
 								<AppointmentScreen />
 							</Route>
-							<Route path="/courses/create" strict>
+							<Route path="/courses/create" explicit>
 								<CreateCourseScreen />
 							</Route>
 							<Route
 								path="/courses/:id"
-								strict
+								explicit
 								component={(props) => (
 									<EditCourseScreen id={props.match.params.id} />
 								)}
 							/>
-							<Route path="/courses" strict>
+							<Route path="/courses" explicit>
 								<CourseScreen />
 							</Route>
 							<Route path="/" explicit>

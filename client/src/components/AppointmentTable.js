@@ -304,7 +304,11 @@ export default function AppointmentTable() {
                                             selected={isItemSelected}
                                         >
                                             <TableCell component="th" align="left" id={labelId} scope="row" padding="none">
-                                                {data.start != null ? (new Date(data.start)).toLocaleString() : data.start}
+                                                {data.start != null ?
+                                                    (new Date(data.start)).toLocaleString([],
+                                                        {weekday: "long",year: "numeric" ,month: "short", day: "2-digit",
+                                                            hour: '2-digit', minute:'2-digit'}) + " Uhr"
+                                                    : data.start}
                                             </TableCell>
                                             <TableCell align="left">{data.title}</TableCell>
                                             <TableCell align="left">{data.place}

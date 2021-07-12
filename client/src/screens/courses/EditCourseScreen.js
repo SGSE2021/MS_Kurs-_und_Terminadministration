@@ -41,16 +41,15 @@ const EditCourseScreen = ({ id }) => {
 	const [name, setName] = React.useState("");
 	const [subject, setSubject] = React.useState("");
 	const [subjects, setSubjects] = React.useState([]);
-	const [start, setStart] = React.useState(Date.now());
-	const [end, setEnd] = React.useState(Date.now());
+	const [start, setStart] = React.useState(new Date(Date.now()));
+	const [end, setEnd] = React.useState(new Date(Date.now()));
 	const [repetition, setRepetition] = React.useState("");
 	const [times, setTimes] = React.useState(1);
 	const [place, setPlace] = React.useState("");
 	const [places, setPlaces] = React.useState([]);
 	const [description, setDescription] = React.useState("");
-	const [docents, setDocents] = React.useState("");
+	const [docents, setDocents] = React.useState([]);
 	const [lecturers, setLecturers] = React.useState([]);
-
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -63,7 +62,7 @@ const EditCourseScreen = ({ id }) => {
 			setTimes(courseFromApi[0].times);
 			setPlace(courseFromApi[0].place);
 			setDescription(courseFromApi[0].description);
-			setDocents(courseFromApi[0].docents);
+			setDocents(courseFromApi[0].docents.split(','));
 		};
 		const fetchSubjects = async () => {
 			const {data: subjectsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/studycourses");
@@ -77,8 +76,11 @@ const EditCourseScreen = ({ id }) => {
 		};
 		const fetchPersons = async () => {
 			const {data: lecturersFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers");
-			console.log(lecturersFromApi);
-			setLecturers(lecturersFromApi);
+			let persons = lecturersFromApi.map((item) => {
+				if(item.title === "") return {id: item.id, name: item.firstname + " " + item.lastname}
+				else return {id: item.id, name: item.title + " " + item.firstname + " " + item.lastname};
+			});
+			setLecturers(persons);
 		};
 		fetchSubjects().then().catch(() => console.log("error getting data from API"));
 		fetchPlaces().then().catch(() => console.log("error getting data from API"));
@@ -257,6 +259,7 @@ const EditCourseScreen = ({ id }) => {
 					<Select
 						labelId="demo-simple-select-outlined-label"
 						id="demo-simple-select-outlined"
+						multiple
 						value={docents}
 						onChange={(e) => setDocents(e.target.value)}
 						label="Dozenten"
@@ -266,7 +269,7 @@ const EditCourseScreen = ({ id }) => {
 						</MenuItem>
 						{lecturers.map((docent) => (
 							<MenuItem key={docent.id} value={docent.id}>
-								{docent.firstname} {docent.lastname}
+								{docent.name}
 							</MenuItem>
 						))}
 					</Select>
