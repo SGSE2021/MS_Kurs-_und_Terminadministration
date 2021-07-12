@@ -56,6 +56,8 @@ const CreateAppointmentScreen = () => {
 	const [description, setDescription] = React.useState("");
 	const [docents, setDocents] = React.useState([]);
 	const [lecturers, setLecturers] = React.useState([]);
+	const [persons, setPersons] = React.useState([]);
+	const [personsArray, setPersonsArray] = React.useState([]);
 
 	useEffect(() => {
 		const fetchSubjects = async () => {
@@ -68,7 +70,7 @@ const CreateAppointmentScreen = () => {
 			console.log(placesFromApi);
 			setPlaces(placesFromApi);
 		};
-		const fetchPersons = async () => {
+		const fetchLecturers = async () => {
 			const {data: lecturersFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers");
 			let persons = lecturersFromApi.map((item) => {
 				if(item.title === "") return {id: item.id, name: item.firstname + " " + item.lastname}
@@ -76,9 +78,18 @@ const CreateAppointmentScreen = () => {
 			});
 			setLecturers(persons);
 		};
+		const fetchStudents = async () => {
+			const {data: studentsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/students");
+			let students = studentsFromApi.map((item) => {
+				if(item.title === "") return {id: item.id, name: item.firstname + " " + item.lastname}
+				else return {id: item.id, name: item.title + " " + item.firstname + " " + item.lastname};
+			});
+			setPersonsArray(students);
+		};
 		fetchSubjects().then().catch(() => console.log("error getting data from API"));
 		fetchPlaces().then().catch(() => console.log("error getting data from API"));
-		fetchPersons().then().catch(() => console.log("error getting data from API"));
+		fetchLecturers().then().catch(() => console.log("error getting data from API"));
+		fetchStudents().then().catch(() => console.log("error getting data from API"));
 	}, []);
 
 	const handleStartChange = (date) => {
@@ -101,7 +112,7 @@ const CreateAppointmentScreen = () => {
 		e.preventDefault();
 		const { data } = await axios.post(
 			"https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/courses",
-			{ name, subject, start, end, repetition, times, place, description, docents },
+			{ name, subject, start, end, repetition, times, place, description, docents, persons },
 		);
 		// TODO: Remove log
 		console.log(data);
@@ -259,6 +270,29 @@ const CreateAppointmentScreen = () => {
 						{lecturers.map((docent) => (
 							<MenuItem key={docent.id} value={docent.id}>
 								{docent.name}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+				<FormControl variant="outlined"
+							 style={{ margin: 12, textAlign: "left" }}
+							 fullWidth
+							 margin="normal">
+					<InputLabel id="demo-simple-select-outlined-label">Personen </InputLabel>
+					<Select
+						labelId="demo-simple-select-outlined-label"
+						id="demo-simple-select-outlined"
+						multiple
+						value={persons}
+						onChange={(e) => setPersons(e.target.value)}
+						label="Personen"
+					>
+						<MenuItem value="">
+							<em>None</em>
+						</MenuItem>
+						{personsArray.map((person) => (
+							<MenuItem key={person.id} value={person.id}>
+								{person.name}
 							</MenuItem>
 						))}
 					</Select>

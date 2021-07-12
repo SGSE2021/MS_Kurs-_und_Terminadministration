@@ -181,9 +181,10 @@ app.post(createUrl("courses"), jsonParser, function (req, res) {
 		place = (typeof req.body.place !== 'undefined') ? `'${req.body.place}'` : 'NULL',
 		description = (typeof req.body.description !== 'undefined') ? `'${req.body.description}'` : 'NULL',
 		docents = (typeof req.body.docents !== 'undefined') ? `'${req.body.docents}'` : 'NULL';
+		persons = (typeof req.body.persons !== 'undefined') ? `'${req.body.persons}'` : 'NULL';
 
-	queryDB(`INSERT course (name, subject, start, end, repetition, times, place, description, docents) ` +
-		`VALUES (${name}, ${subject}, ${start}, ${end}, ${repetition}, ${times}, ${place}, ${description}, ${docents})`)
+	queryDB(`INSERT course (name, subject, start, end, repetition, times, place, description, docents, persons) ` +
+		`VALUES (${name}, ${subject}, ${start}, ${end}, ${repetition}, ${times}, ${place}, ${description}, ${docents}, ${persons})`)
 		.then(queryResult => res.status(200).json(queryResult).end())
 		.catch(error => {
 			console.log(error);
@@ -202,9 +203,10 @@ app.put(createUrl("courses"), jsonParser, function (req, res) {
 		place = (typeof req.body.place !== 'undefined') ? `'${req.body.place}'` : 'NULL',
 		description = (typeof req.body.description !== 'undefined') ? `'${req.body.description}'` : 'NULL',
 		docents = (typeof req.body.docents !== 'undefined') ? `'${req.body.docents}'` : 'NULL';
+		persons = (typeof req.body.persons !== 'undefined') ? `'${req.body.persons}'` : 'NULL';
 
 	queryDB(`UPDATE course SET name = ${name}, subject = ${subject}, start = ${start}, end = ${end}, ` +
-		`repetition = ${repetition}, times = ${times}, place = ${place}, description = ${description}, docents = ${docents} ` +
+		`repetition = ${repetition}, times = ${times}, place = ${place}, description = ${description}, docents = ${docents}, persons = ${persons} ` +
 		`WHERE id = ${id}`)
 		.then(queryResult => res.status(200).json(queryResult).end())
 		.catch(error => {
