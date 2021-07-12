@@ -36,7 +36,7 @@ async function queryDB(query) {
 	}
 }
 
-queryDB("DROP TABLE IF EXISTS COURSE")
+queryDB("ALTER TABLE course ADD COLUMN `persons` TEXT NULL DEFAULT NULL AFTER `docents`;")
 	.then(result => console.log(result))
 	.catch();
 
