@@ -12,7 +12,6 @@ import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Logo from "../logo.svg";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import School from "@material-ui/icons/School";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -44,7 +43,6 @@ const useStyles = makeStyles((theme) => ({
 		},
 	},
 	// necessary for content to be below app bar
-	toolbar: theme.mixins.toolbar,
 	drawerPaper: {
 		width: drawerWidth,
 	},
@@ -78,8 +76,10 @@ function ResponsiveDrawer(props) {
 	const drawer = (
 		<div>
 			<div className={classes.toolbar} />
-			<img src={Logo} alt="Logo" />
 			<School />
+			<Typography variant="h6" noWrap>
+				ILIAS 2.0
+			</Typography>
 			<Divider />
 			<List>
 				<Link to="/">

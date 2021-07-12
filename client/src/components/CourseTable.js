@@ -188,46 +188,49 @@ export default function CourseTable() {
 
     const [data, setData] = useState([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const {data: coursesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/courses");
-            for (let i = 0; i < coursesFromApi.length; i++) {
-                let docents = "";
-                const docentIds = coursesFromApi[i].docents.split(',');
-                for (let j = 0; j < docentIds.length; j++) {
-                    const {data: result} = await axios.get(`https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers/${docentIds[j]}`);
-                    if (j > 0) docents = docents + ", ";
-                    if (result != null) {
-                        if (result.title === "") {
-                            docents = docents + result.firstname + " " + result.lastname
-                        }
-                        else {
-                            docents = docents + result.title + " " + result.firstname + " " + result.lastname
-                        }
+    const fetchData = async () => {
+        const {data: coursesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/courses");
+        for (let i = 0; i < coursesFromApi.length; i++) {
+            let docents = "";
+            const docentIds = coursesFromApi[i].docents.split(',');
+            for (let j = 0; j < docentIds.length; j++) {
+                const {data: result} = await axios.get(`https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers/${docentIds[j]}`);
+                if (j > 0) docents = docents + ", ";
+                if (result != null) {
+                    if (result.title === "") {
+                        docents = docents + result.firstname + " " + result.lastname
                     }
                     else {
-                        docents = docents + "Dozent nicht gefunden";
+                        docents = docents + result.title + " " + result.firstname + " " + result.lastname
                     }
                 }
-                coursesFromApi[i].docents = docents;
+                else {
+                    docents = docents + "Dozent nicht gefunden";
+                }
             }
-            setData(coursesFromApi);
-        };
+            coursesFromApi[i].docents = docents;
+        }
+        setData(coursesFromApi);
+    };
+
+    useEffect(() => {
         fetchData().then().catch(() => console.log("error getting data from API"));
     }, []);
 
     const handleDeleteClick = (e) => {
         e.preventDefault();
-        const fetchData = async (key) => {
+        const deleteData = async (key) => {
             const {queryResult} = await axios.delete(`https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/courses/${selected[key]}`);
             return queryResult;
         };
         for (const key in selected) {
-            fetchData(key)
+            deleteData(key)
                 .then(() => data.splice(data.findIndex(({id}) => id === selected[key]), 1))
                 .catch(error => console.log(error));
         }
         setSelected([]);
+
+        fetchData().then().catch(() => console.log("error getting data from API"));
     };
 
     const classes = useStyles();
@@ -314,8 +317,6 @@ export default function CourseTable() {
                                         <TableRow
                                             hover
                                             onClick={(event) => handleClick(event, data.id)}
-                                            role="checkbox"
-                                            aria-checked={isItemSelected}
                                             tabIndex={-1}
                                             key={data.id}
                                             selected={isItemSelected}
@@ -331,9 +332,9 @@ export default function CourseTable() {
                                             <TableCell align="left">{data.docents}</TableCell>
                                             <TableCell align="left">{data.place}
                                                 { (isItemSelected > 0) && (
-                                                    <Tooltip title="Delete">
+                                                    <Tooltip title="Bearbeiten">
                                                         <Link to={`/courses/${data.id}`}>
-                                                            <IconButton aria-label="delete">
+                                                            <IconButton aria-label="Bearbeiten">
                                                                 <ArrowRight />
                                                             </IconButton>
                                                         </Link>
