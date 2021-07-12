@@ -36,6 +36,10 @@ async function queryDB(query) {
 	}
 }
 
+queryDB("DROP TABLE IF EXISTS COURSE")
+	.then(result => console.log(result))
+	.catch();
+
 queryDB("SELECT * FROM course")
 	.then()
 	.catch((error) => {
@@ -51,7 +55,8 @@ queryDB("SELECT * FROM course")
 			"times INT,\n" +
 			"place INT,\n" +
 			"description TEXT,\n" +
-			"docents TEXT); ")
+			"docents TEXT,\n" +
+			"persons TEXT); ")
 			.then(() => console.log("Created table course successfully"))
 			.catch((error) => {
 				console.log(error);
