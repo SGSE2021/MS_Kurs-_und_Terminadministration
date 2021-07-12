@@ -66,7 +66,7 @@ const CreateAppointmentScreen = () => {
 			setSubjects(subjectsFromApi);
 		};
 		const fetchPlaces = async () => {
-			const {data: placesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/studycourses");
+			const {data: placesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/booking-api/rooms/");
 			console.log(placesFromApi);
 			setPlaces(placesFromApi);
 		};
@@ -232,9 +232,9 @@ const CreateAppointmentScreen = () => {
 						<MenuItem value="">
 							<em>None</em>
 						</MenuItem>
-						{places.map((place) => (
-							<MenuItem key={place.id} value={place.id}>
-								{place.name}
+						{places.map((placesItem) => (
+							<MenuItem key={placesItem.id} value={placesItem.id}>
+								{placesItem.name}
 							</MenuItem>
 						))}
 					</Select>

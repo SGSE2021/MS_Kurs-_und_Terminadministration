@@ -50,6 +50,8 @@ const EditCourseScreen = ({ id }) => {
 	const [description, setDescription] = React.useState("");
 	const [docents, setDocents] = React.useState([]);
 	const [lecturers, setLecturers] = React.useState([]);
+	const [persons, setPersons] = React.useState([]);
+	const [personsArray, setPersonsArray] = React.useState([]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -62,7 +64,8 @@ const EditCourseScreen = ({ id }) => {
 			setTimes(courseFromApi[0].times);
 			setPlace(courseFromApi[0].place);
 			setDescription(courseFromApi[0].description);
-			setDocents(courseFromApi[0].docents.split(','));
+			if (courseFromApi[0].docents != null) setDocents(courseFromApi[0].docents.split(','));
+			if (courseFromApi[0].persons != null) setPersons(courseFromApi[0].persons.split(','));
 		};
 		const fetchSubjects = async () => {
 			const {data: subjectsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/studycourses");
@@ -74,7 +77,7 @@ const EditCourseScreen = ({ id }) => {
 			console.log(placesFromApi);
 			setPlaces(placesFromApi);
 		};
-		const fetchPersons = async () => {
+		const fetchLecturers = async () => {
 			const {data: lecturersFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/lecturers");
 			let persons = lecturersFromApi.map((item) => {
 				if(item.title === "") return {id: item.id, name: item.firstname + " " + item.lastname}
@@ -82,9 +85,18 @@ const EditCourseScreen = ({ id }) => {
 			});
 			setLecturers(persons);
 		};
+		const fetchStudents = async () => {
+			const {data: studentsFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/users-api/students");
+			let students = studentsFromApi.map((item) => {
+				if(item.title === "") return {id: item.id, name: item.firstname + " " + item.lastname}
+				else return {id: item.id, name: item.title + " " + item.firstname + " " + item.lastname};
+			});
+			setPersonsArray(students);
+		};
 		fetchSubjects().then().catch(() => console.log("error getting data from API"));
 		fetchPlaces().then().catch(() => console.log("error getting data from API"));
-		fetchPersons().then().catch(() => console.log("error getting data from API"));
+		fetchLecturers().then().catch(() => console.log("error getting data from API"));
+		fetchStudents().then().catch(() => console.log("error getting data from API"));
 		fetchData().then().catch();
 
 	}, [id]);
@@ -112,7 +124,7 @@ const EditCourseScreen = ({ id }) => {
 		e.preventDefault();
 		const { data } = await axios.put(
 			"https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/courses",
-			{ id, name, subject, start, end, repetition, times, place, description, docents },
+			{ id, name, subject, start, end, repetition, times, place, description, docents, persons },
 		);
 		// TODO: Remove log
 		console.log(data);
@@ -274,7 +286,29 @@ const EditCourseScreen = ({ id }) => {
 						))}
 					</Select>
 				</FormControl>
-
+				<FormControl variant="outlined"
+							 style={{ margin: 12, textAlign: "left" }}
+							 fullWidth
+							 margin="normal">
+					<InputLabel id="demo-simple-select-outlined-label">Personen </InputLabel>
+					<Select
+						labelId="demo-simple-select-outlined-label"
+						id="demo-simple-select-outlined"
+						multiple
+						value={persons}
+						onChange={(e) => setPersons(e.target.value)}
+						label="Personen"
+					>
+						<MenuItem value="">
+							<em>None</em>
+						</MenuItem>
+						{personsArray.map((person) => (
+							<MenuItem key={person.id} value={person.id}>
+								{person.name}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
 				<Link to="/courses">
 					<Button>Abbrechen</Button>
 				</Link>
