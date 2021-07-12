@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import "date-fns";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import ResponsiveDrawer from "./components/MenuAppBar";
 import CreateAppointmentScreen from "./screens/appointments/CreateAppointmentScreen";
 import AppointmentScreen from "./screens/appointments/AppointmentScreen";
@@ -29,9 +29,19 @@ function App() {
 	const [title, setTitle] = useState("Startseite");
 
 	const classes = useStyles();
-	localStorage.setItem('current-user',"{\"uid\":\"dSwafL2b0sQcYxJgmCpzcfkh3b43\",\"firstname\":\"Dennis\",\"lastname\":\"Admin\",\"role\":2}");
+
+	//localStorage.setItem('current-user',"{\"uid\":\"dSwafL2b0sQcYxJgmCpzcfkh3b43\",\"firstname\":\"Dennis\",\"lastname\":\"Admin\",\"role\":2}");
 	const currentUserString = localStorage.getItem( "current-user" );
 	const currentUserObject = JSON.parse(currentUserString );
+
+	if (currentUserObject === null || currentUserObject === undefined) {
+		return (
+			<Router>
+				<Redirect to="/users"/>
+			</Router>
+		)
+	}
+
 	const {role} = currentUserObject;
 
 	//TODO: Check user with uid over user Api

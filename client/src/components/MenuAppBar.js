@@ -122,9 +122,11 @@ function ResponsiveDrawer(props) {
 						<ListItemText primary="Raumbuchung" />
 					</ListItem>
 				</a>
-				<ListItem button key="Ausloggen">
-					<ListItemText primary="Ausloggen" />
-				</ListItem>
+				<a href="https://sgse2021-ilias.westeurope.cloudapp.azure.com/users/logout">
+					<ListItem button key="Ausloggen">
+						<ListItemText primary="Ausloggen" />
+					</ListItem>
+				</a>
 			</List>
 		</div>
 	);
