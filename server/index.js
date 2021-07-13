@@ -9,7 +9,6 @@ const mariadb = require('mariadb');
 const DATABASE_DNS = process.env.DATABASE_DNS !== undefined ? process.env.DATABASE_DNS : 'localhost';
 const DATABASE_USER = process.env.DATABASE_USER !== undefined ? process.env.DATABASE_USER : 'root';
 const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD !== undefined ? process.env.DATABASE_PASSWORD : 'geheim';
-const DATABASE_ADMIN_PW = process.env.DATABASE_ADMIN_PW !== undefined ? process.env.DATABASE_ADMIN_PW : 'geheim';
 const DATABASE_NAME = process.env.DATABASE_NAME !== undefined ? process.env.DATABASE_NAME : 'kursterminadministration';
 const DATABASE_PORT = process.env.DATABASE_PORT !== undefined ? process.env.DATABASE_PORT : '3306';
 
@@ -77,16 +76,10 @@ queryDB("SELECT * FROM appointment")
 			.catch(() => console.log("Couldn't create table appointment"))
 	});
 
-
-
-app.get(createUrl(), function (req, res) {
-	res.send("Hello World");
-});
-
 app.get(createUrl("appointments"), function (req, res) {
 	queryDB("SELECT * FROM appointment")
 		.then(queryResult => res.status(200).json(queryResult).end())
-		.catch(error => res.status(400).end());
+		.catch(() => res.status(400).end());
 });
 
 app.get(createUrl("appointments/:id"), function (req, res) {
@@ -101,7 +94,6 @@ app.get(createUrl("appointments/:id"), function (req, res) {
 });
 
 app.post(createUrl("appointments"), jsonParser, function (req, res) {
-	console.log(req.body);
 
 	const title = (typeof req.body.title !== 'undefined') ? `'${req.body.title}'` : 'NULL',
 		start = (typeof req.body.start !== 'undefined') ? `'${req.body.start}`.replace("T", " ").slice(0,-5) + `'` : 'NULL',
@@ -119,7 +111,6 @@ app.post(createUrl("appointments"), jsonParser, function (req, res) {
 });
 
 app.put(createUrl("appointments"), jsonParser, function (req, res) {
-	//console.log(req.body);
 
 	const id = req.body.id,
 		title = (typeof req.body.title !== 'undefined') ? `'${req.body.title}'` : 'NULL',
@@ -134,8 +125,7 @@ app.put(createUrl("appointments"), jsonParser, function (req, res) {
 		`repetition = ${repetition}, place = ${place}, description = ${description}, persons = ${persons} ` +
 		`WHERE id = ${id}`)
 		.then(queryResult => res.status(200).json(queryResult).end())
-		.catch(error => {
-			//console.log(error);
+		.catch(() => {
 			res.status(400).end();});
 });
 
@@ -145,25 +135,24 @@ app.delete(createUrl("appointments/:id"), function (req, res) {
 	} = req;
 
 	queryDB(`DELETE FROM appointment WHERE id = ${id}`)
-		.then(queryResult => res.status(204).end())
-		.catch(error => res.status(400).end());
+		.then(() => res.status(204).end())
+		.catch(() => res.status(400).end());
 });
 
 app.get(createUrl("courses"), function (req, res) {
 	queryDB("SELECT * FROM course")
 		.then(queryResult => res.status(200).json(queryResult).end())
-		.catch(error => res.status(400).end());
+		.catch(() => res.status(400).end());
 });
 
 app.get(createUrl("courses/:id"), function (req, res) {
-	//console.log(req);
 
 	const {
 		params: { id },
 	} = req;
 	queryDB(`SELECT * FROM course WHERE id = ${id}`)
 		.then(queryResult => res.status(200).json(queryResult).end())
-		.catch(error => res.status(400).end());
+		.catch(() => res.status(400).end());
 });
 
 app.post(createUrl("courses"), jsonParser, function (req, res) {
@@ -188,7 +177,7 @@ app.post(createUrl("courses"), jsonParser, function (req, res) {
 });
 
 app.put(createUrl("courses"), jsonParser, function (req, res) {
-	//console.log(req.body);
+
 	const id = req.body.id,
 		name = (typeof req.body.name !== 'undefined') ? `'${req.body.name}'` : 'NULL',
 		subject = (typeof req.body.subject !== 'undefined') ? `'${req.body.subject}'` : 'NULL',
@@ -216,8 +205,8 @@ app.delete(createUrl("courses/:id"), function (req, res) {
 	} = req;
 
 	queryDB(`DELETE FROM course WHERE id = ${id}`)
-		.then(queryResult => res.status(204).end())
-		.catch(error => res.status(400).end());
+		.then(() => res.status(204).end())
+		.catch(() => res.status(400).end());
 });
 
 
@@ -228,7 +217,7 @@ app.get(createUrl("findAppointments"), function (req, res) {
 	const value = query[key];
 	queryDB(`SELECT * FROM appointment WHERE ${key} = '${value}'`)
 		.then(queryResult => res.status(200).json(queryResult).end())
-		.catch(error => res.status(400).end());
+		.catch(() => res.status(400).end());
 });
 
 app.get(createUrl("findCourses"), function (req, res) {
@@ -237,7 +226,7 @@ app.get(createUrl("findCourses"), function (req, res) {
 	const value = query[key];
 	queryDB(`SELECT * FROM course WHERE ${key} = '${value}'`)
 		.then(queryResult => res.status(200).json(queryResult).end())
-		.catch(error => res.status(400).end());
+		.catch(() => res.status(400).end());
 });
 
 console.log(`listening on port ${port}`);
