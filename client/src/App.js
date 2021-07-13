@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import "date-fns";
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import ResponsiveDrawer from "./components/MenuAppBar";
@@ -82,6 +82,9 @@ function App() {
 								<CourseScreen />
 							</Route>
 							<Route path="/" explicit>
+								<Router>
+									<Redirect to="/users/"/>
+								</Router>
 								<Helmet>
 									<title>Startseite</title>
 								</Helmet>

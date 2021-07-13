@@ -6,7 +6,16 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Helmet} from "react-helmet";
 
 const useStyles = makeStyles(() => ({
+	root: {
+		display: "flex",
+		flexWrap: "wrap",
+		width: "80vw",
+		marginLeft: "180px",
+		marginTop: "80px",
+		justifyContent: "flex-end",
+	},
 	button: {
+		marginBottom: "10px",
 	},
 
 }));
@@ -14,12 +23,12 @@ const useStyles = makeStyles(() => ({
 const AppointmentScreen = () => {
 	const classes = useStyles();
 	return (
-		<div>
+		<div className={classes.root}>
 			<Helmet>
 				<title>Kurse</title>
 			</Helmet>
 			<Link  to="/courses/create">
-				<Button className={classes.button}>Kurs anlegen</Button>
+				<Button variant="contained" color="primary" className={classes.button}>Kurs anlegen</Button>
 			</Link>
 			<CourseTable/>
 		</div>

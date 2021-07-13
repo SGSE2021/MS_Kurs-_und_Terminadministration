@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 		[theme.breakpoints.up("sm")]: {
 			width: `calc(100% - ${drawerWidth}px)`,
 			marginLeft: drawerWidth,
+
 		},
 	},
 	menuButton: {
@@ -48,10 +49,20 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1,
 		padding: theme.spacing(3),
 	},
+	buttonGroup: {
+		flex: 1,
+		display: "flex",
+		flexWrap: "wrap",
+		justifyContent: "flex-end",
+		'align-items': 'center',
+	},
+	button: {
+		margin: theme.spacing(1.5),
+	},
 }));
 
 function ResponsiveDrawer(props) {
-	const [title, setTitle] = useState("Startseite");
+	const [title, setTitle] = useState("ILIAS 2.0");
 	const { window } = props;
 	const classes = useStyles();
 	const theme = useTheme();
@@ -61,11 +72,9 @@ function ResponsiveDrawer(props) {
 		setMobileOpen(!mobileOpen);
 	};
 
-	const [anchorEl, setAnchorEl] = React.useState(null);
-
-	const handleClick = () => {
-		setTitle("Kurse");
-	};
+	const currentUserString = localStorage.getItem( "current-user" );
+	const currentUserObject = JSON.parse(currentUserString );
+	const name = currentUserObject.firstname + " " + currentUserObject.lastname;
 
 	const drawer = (
 		<div>
@@ -86,12 +95,12 @@ function ResponsiveDrawer(props) {
 						<ListItemText primary="Nachrichten" />
 					</ListItem>
 				</a>
-				<Link to="/courses/" onClick={handleClick}>
+				<Link to="/courses/" onClick={() => setTitle("Kurse")}>
 					<ListItem button key="Kurse">
 						<ListItemText primary="Kurse" />
 					</ListItem>
 				</Link>
-				<Link to="/appointments/">
+				<Link to="/appointments/" onClick={() => setTitle("Termine")}>
 					<ListItem button key="Termine">
 						<ListItemText primary="Termine" />
 					</ListItem>
@@ -145,7 +154,10 @@ function ResponsiveDrawer(props) {
 					<Typography variant="h6" noWrap>
 						{title}
 					</Typography>
-						<div>
+						<div className={classes.buttonGroup}>
+							<Typography variant="h6" noWrap>
+								{name}
+							</Typography>
 							<IconButton
 								aria-label="account of current user"
 								aria-controls="menu-appbar"

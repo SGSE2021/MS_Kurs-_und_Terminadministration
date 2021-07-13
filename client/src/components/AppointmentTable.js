@@ -297,7 +297,7 @@ export default function AppointmentTable() {
                             key={data.id}
                             selected={isItemSelected}
                         >
-                            <TableCell component="th" align="left" id={labelId} scope="row" padding="none">
+                            <TableCell component="th" align="left" id={labelId} scope="row" padding="default">
                                 {data.start != null ?
                                     (new Date(data.start)).toLocaleString([],
                                         {weekday: "long",year: "numeric" ,month: "short", day: "2-digit",

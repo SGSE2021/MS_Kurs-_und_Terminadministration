@@ -32,7 +32,16 @@ const useStyles = makeStyles((theme) => ({
 	},
 	formControl: {
 		width: "10vw",
-	}
+	},
+	buttonGroup: {
+		display: "flex",
+		flexWrap: "wrap",
+		width: "100%",
+		justifyContent: "flex-end",
+	},
+	button: {
+		margin: theme.spacing(1.5),
+	},
 }));
 
 const EditAppointment = ({ id }) => {
@@ -131,7 +140,7 @@ const EditAppointment = ({ id }) => {
 						format="yyyy/MM/dd HH:mm"
 						margin="normal"
 						id="date-picker-inline"
-						label="Start"
+						label="Beginn"
 						value={start}
 						onChange={handleStartChange}
 						KeyboardButtonProps={{
@@ -222,10 +231,12 @@ const EditAppointment = ({ id }) => {
 						))}
 					</Select>
 				</FormControl>
-				<Link to="/appointments">
-					<Button>Abbrechen</Button>
-				</Link>
-				<div><Button type="submit">Termin ändern</Button></div>
+				<div className={classes.buttonGroup}>
+					<Link to="/appointments">
+						<Button className={classes.button} variant="contained" color="primary">Abbrechen</Button>
+					</Link>
+					<div><Button className={classes.button} type="submit" variant="contained" color="primary">Speichern</Button></div>
+				</div>
 			</form>
 		</>
 	);

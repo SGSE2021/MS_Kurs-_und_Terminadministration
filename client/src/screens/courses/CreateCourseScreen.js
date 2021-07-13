@@ -39,6 +39,15 @@ const useStyles = makeStyles((theme) => ({
 		minWidth: 120,
 		maxWidth: 300,
 	},
+	buttonGroup: {
+		display: "flex",
+		flexWrap: "wrap",
+		width: "100%",
+		justifyContent: "flex-end",
+	},
+	button: {
+		margin: theme.spacing(1.5),
+	},
 }));
 
 const CreateAppointmentScreen = () => {
@@ -165,7 +174,7 @@ const CreateAppointmentScreen = () => {
 						format="yyyy/MM/dd HH:mm"
 						margin="normal"
 						id="date-picker-inline"
-						label="Date picker inline"
+						label="Beginn"
 						value={start}
 						onChange={handleStartChange}
 						KeyboardButtonProps={{
@@ -179,7 +188,7 @@ const CreateAppointmentScreen = () => {
 						format="yyyy/MM/dd HH:mm"
 						margin="normal"
 						id="date-picker-inline"
-						label="Date picker inline"
+						label="Ende"
 						value={end}
 						onChange={handleEndChange}
 						KeyboardButtonProps={{
@@ -288,11 +297,12 @@ const CreateAppointmentScreen = () => {
 						))}
 					</Select>
 				</FormControl>
-
-				<Link to="/courses">
-					<Button>Abbrechen</Button>
-				</Link>
-				<div><Button type="submit">Kurs anlegen</Button></div>
+				<div className={classes.buttonGroup}>
+					<Link to="/courses">
+						<Button className={classes.button} variant="contained" color="primary">Abbrechen</Button>
+					</Link>
+					<div><Button className={classes.button} type="submit" variant="contained" color="primary">Kurs anlegen</Button></div>
+				</div>
 			</form>
 		</>
 	);

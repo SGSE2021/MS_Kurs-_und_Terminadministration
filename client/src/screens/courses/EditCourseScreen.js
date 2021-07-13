@@ -32,7 +32,16 @@ const useStyles = makeStyles((theme) => ({
 	},
 	formControl: {
 		width: "10vw",
-	}
+	},
+	buttonGroup: {
+		display: "flex",
+		flexWrap: "wrap",
+		width: "100%",
+		justifyContent: "flex-end",
+	},
+	button: {
+		margin: theme.spacing(1.5),
+	},
 }));
 
 const EditCourseScreen = ({ id }) => {
@@ -176,7 +185,7 @@ const EditCourseScreen = ({ id }) => {
 						format="yyyy/MM/dd HH:mm"
 						margin="normal"
 						id="date-picker-inline"
-						label="Date picker inline"
+						label="Beginn"
 						value={start}
 						onChange={handleStartChange}
 						KeyboardButtonProps={{
@@ -190,7 +199,7 @@ const EditCourseScreen = ({ id }) => {
 						format="yyyy/MM/dd HH:mm"
 						margin="normal"
 						id="date-picker-inline"
-						label="Date picker inline"
+						label="Ende"
 						value={end}
 						onChange={handleEndChange}
 						KeyboardButtonProps={{
@@ -299,10 +308,12 @@ const EditCourseScreen = ({ id }) => {
 						))}
 					</Select>
 				</FormControl>
-				<Link to="/courses">
-					<Button>Abbrechen</Button>
-				</Link>
-				<div><Button type="submit">Kurs bearbeiten</Button></div>
+				<div className={classes.buttonGroup}>
+					<Link to="/courses">
+						<Button className={classes.button} variant="contained" color="primary">Abbrechen</Button>
+					</Link>
+					<div><Button className={classes.button} type="submit" variant="contained" color="primary">Speichern</Button></div>
+				</div>
 			</form>
 		</>
 	);

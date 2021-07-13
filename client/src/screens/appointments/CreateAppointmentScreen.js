@@ -36,7 +36,16 @@ const useStyles = makeStyles((theme) => ({
 	},
 	formControl: {
 		width: "10vw",
-	}
+	},
+	buttonGroup: {
+		display: "flex",
+		flexWrap: "wrap",
+		width: "100%",
+		justifyContent: "flex-end",
+	},
+	button: {
+		margin: theme.spacing(1.5),
+	},
 }));
 
 const CreateAppointmentScreen = () => {
@@ -208,10 +217,12 @@ const CreateAppointmentScreen = () => {
 						))}
 					</Select>
 				</FormControl>
-				<Link to="/appointments">
-					<Button>Abbrechen</Button>
-				</Link>
-				<div><Button type="submit">Termin anlegen</Button></div>
+				<div className={classes.buttonGroup}>
+					<Link to="/appointments">
+						<Button className={classes.button} variant="contained" color="primary">Abbrechen</Button>
+					</Link>
+					<div><Button className={classes.button} type="submit" variant="contained" color="primary">Termin anlegen</Button></div>
+				</div>
 			</form>
 		</>
 	);
