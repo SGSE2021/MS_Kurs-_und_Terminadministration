@@ -82,13 +82,8 @@ function App() {
 								<CourseScreen />
 							</Route>
 							<Route path="/" explicit>
-								<Router>
-									<Redirect to="/users/"/>
-								</Router>
-								<Helmet>
-									<title>Startseite</title>
-								</Helmet>
-								Startseite
+									<Redirect to="/courses/"/>
+
 							</Route>
 						</Switch>) : (
 						<div>
