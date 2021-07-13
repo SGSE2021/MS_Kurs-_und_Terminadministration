@@ -16,10 +16,9 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import axios from "axios";
 import {ArrowRight} from "@material-ui/icons";
-import {Link, useHistory} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -142,12 +141,7 @@ const EnhancedTableToolbar = (props) => {
                         <DeleteIcon />
                     </IconButton>
                 </Tooltip>
-            ) : (
-                <Tooltip title="Filtern">
-                    <IconButton aria-label="filter list">
-                        <FilterListIcon />
-                    </IconButton>
-                </Tooltip>
+            ) : ( <div></div>
             )}
         </Toolbar>
     );
@@ -184,8 +178,6 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function AppointmentTable() {
-
-    const history = useHistory();
 
     const [data, setData] = useState([]);
     const classes = useStyles();

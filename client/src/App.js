@@ -27,9 +27,7 @@ const useStyles = makeStyles(() => ({
 
 function App() {
 
-	const [title, setTitle] = useState("Startseite");
-
-	localStorage.setItem('current-user',"{\"uid\":\"dSwafL2b0sQcYxJgmCpzcfkh3b43\",\"firstname\":\"Dennis\",\"lastname\":\"Admin\",\"role\":2}");
+	//localStorage.setItem('current-user',"{\"uid\":\"dSwafL2b0sQcYxJgmCpzcfkh3b43\",\"firstname\":\"Dennis\",\"lastname\":\"Admin\",\"role\":2}");
 
 	const classes = useStyles();
 	const checkUser = () => {

@@ -16,7 +16,6 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import axios from "axios";
 import {ArrowRight} from "@material-ui/icons";
 import {Link} from "react-router-dom";

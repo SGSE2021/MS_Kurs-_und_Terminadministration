@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
@@ -14,8 +14,6 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import School from "@material-ui/icons/School";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
 import { Link } from "react-router-dom";
 
 const drawerWidth = 180;
@@ -53,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ResponsiveDrawer(props) {
+	const [title, setTitle] = useState("Startseite");
 	const { window } = props;
 	const classes = useStyles();
 	const theme = useTheme();
@@ -63,14 +62,9 @@ function ResponsiveDrawer(props) {
 	};
 
 	const [anchorEl, setAnchorEl] = React.useState(null);
-	const open = Boolean(anchorEl);
 
-	const handleMenu = (event) => {
-		setAnchorEl(event.currentTarget);
-	};
-
-	const handleClose = () => {
-		setAnchorEl(null);
+	const handleClick = () => {
+		setTitle("Kurse");
 	};
 
 	const drawer = (
@@ -82,17 +76,17 @@ function ResponsiveDrawer(props) {
 			</Typography>
 			<Divider />
 			<List>
-				<Link to="/">
-				<ListItem button key="Startseite">
-					<ListItemText primary="Startseite" />
-				</ListItem>
-				</Link>
+				<a href="https://sgse2021-ilias.westeurope.cloudapp.azure.com/users/">
+					<ListItem button key="Startseite">
+						<ListItemText primary="Startseite" />
+					</ListItem>
+				</a>
 				<a href="https://sgse2021-ilias.westeurope.cloudapp.azure.com/messages/">
 					<ListItem button key="Nachrichten">
 						<ListItemText primary="Nachrichten" />
 					</ListItem>
 				</a>
-				<Link to="/courses/">
+				<Link to="/courses/" onClick={handleClick}>
 					<ListItem button key="Kurse">
 						<ListItemText primary="Kurse" />
 					</ListItem>
@@ -149,37 +143,19 @@ function ResponsiveDrawer(props) {
 						<MenuIcon />
 					</IconButton>
 					<Typography variant="h6" noWrap>
-						Startseite
+						{title}
 					</Typography>
-					<div>
-						<IconButton
-							aria-label="account of current user"
-							aria-controls="menu-appbar"
-							aria-haspopup="true"
-							onClick={handleMenu}
-							color="inherit"
-						>
+						<div>
+							<IconButton
+								aria-label="account of current user"
+								aria-controls="menu-appbar"
+								aria-haspopup="true"
+								color="inherit"
+							>
 							<AccountCircle />
 						</IconButton>
-						<Menu
-							id="menu-appbar"
-							anchorEl={anchorEl}
-							anchorOrigin={{
-								vertical: "top",
-								horizontal: "right",
-							}}
-							keepMounted
-							transformOrigin={{
-								vertical: "top",
-								horizontal: "right",
-							}}
-							open={open}
-							onClose={handleClose}
-						>
-							<MenuItem onClick={handleClose}>Profile</MenuItem>
-							<MenuItem onClick={handleClose}>My account</MenuItem>
-						</Menu>
 					</div>
+
 				</Toolbar>
 			</AppBar>
 			<nav className={classes.drawer} aria-label="mailbox folders">
