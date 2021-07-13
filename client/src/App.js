@@ -27,8 +27,6 @@ const useStyles = makeStyles(() => ({
 
 function App() {
 
-	//localStorage.setItem('current-user',"{\"uid\":\"dSwafL2b0sQcYxJgmCpzcfkh3b43\",\"firstname\":\"Dennis\",\"lastname\":\"Admin\",\"role\":2}");
-
 	const classes = useStyles();
 	const checkUser = () => {
 		const currentUserString = localStorage.getItem( "current-user" );
@@ -37,7 +35,6 @@ function App() {
 		else return currentUserObject.role;
 	}
 
-
 	if (checkUser() === null) {
 		return (
 			<Router>
@@ -45,8 +42,6 @@ function App() {
 			</Router>
 		)
 	}
-
-	//TODO: Check user with uid over user Api
 
 	return (
 		<Router basename="/courses">

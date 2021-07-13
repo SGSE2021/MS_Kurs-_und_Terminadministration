@@ -72,7 +72,6 @@ const EditAppointment = ({ id }) => {
 		};
 		const fetchPlaces = async () => {
 			const {data: placesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/booking-api/rooms/");
-			console.log(placesFromApi);
 			setPlaces(placesFromApi);
 		};
 		const fetchPersons = async () => {
@@ -90,8 +89,6 @@ const EditAppointment = ({ id }) => {
 
 	const handleStartChange = (date) => {
 		setStart(date);
-		//TODO: Remove log
-		console.log(date);
 	};
 	const handleEndChange = (date) => {
 		setEnd(date);
@@ -103,11 +100,10 @@ const EditAppointment = ({ id }) => {
 
 	const handleCreateAppointment = async (e) => {
 		e.preventDefault();
-		const { data } = await axios.put(
+		await axios.put(
 			"https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/appointments",
 			{ id, title, start, end, repetition, place, description, persons },
 		);
-		console.log(data);
 		history.push("/appointments");
 	};
 

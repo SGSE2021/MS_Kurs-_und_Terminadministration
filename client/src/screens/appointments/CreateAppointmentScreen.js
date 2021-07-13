@@ -65,7 +65,6 @@ const CreateAppointmentScreen = () => {
 	useEffect(() => {
 		const fetchPlaces = async () => {
 			const {data: placesFromApi} = await axios.get("https://sgse2021-ilias.westeurope.cloudapp.azure.com/booking-api/rooms/");
-			console.log(placesFromApi);
 			setPlaces(placesFromApi);
 		};
 		const fetchPersons = async () => {
@@ -89,7 +88,6 @@ const CreateAppointmentScreen = () => {
 
 	const handleCreateAppointment = async (e) => {
 		e.preventDefault();
-		console.log({ title, start, end, repetition, place, description, persons });
 		await axios.post(
 			"https://sgse2021-ilias.westeurope.cloudapp.azure.com/courses-api/appointments",
 			{ title, start, end, repetition, place, description, persons },

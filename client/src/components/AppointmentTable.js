@@ -194,7 +194,6 @@ export default function AppointmentTable() {
             if(appointmentsFromApi[i].place !== 0) appointmentsFromApi[i].place = result.find(item => parseInt(item.id) === appointmentsFromApi[i].place).name;
             else appointmentsFromApi[i].place = "Keiner";
         }
-        console.log(appointmentsFromApi);
         setData(appointmentsFromApi);
     };
 
@@ -249,8 +248,6 @@ export default function AppointmentTable() {
         }
 
         setSelected(newSelected);
-        console.log(data);
-        console.log(selected);
     };
 
     const handleChangePage = (event, newPage) => {
